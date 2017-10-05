@@ -1,6 +1,7 @@
-package com.inkubator.adryan.learnarabic.rest;
+package com.inkubator.adryan.learnarabic.response;
 
 
+import com.google.gson.annotations.SerializedName;
 import com.inkubator.adryan.learnarabic.model.Materi;
 import com.inkubator.adryan.learnarabic.model.MateriDetail;
 
@@ -12,6 +13,7 @@ import java.util.List;
 
 public class ResponseMateriDetail {
 
+    @SerializedName("master")
    private List<MateriDetail> materiDetail = null;
 
     public ResponseMateriDetail(List<MateriDetail> materiDetail){

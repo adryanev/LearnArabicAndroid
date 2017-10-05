@@ -19,7 +19,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activity.MateriActivity"></activity>
+        <activity android:name=".activity.MateriDetailActivity"
+            android:parentActivityName=".activity.MainActivity"></activity>
+        <activity android:name=".activity.UjianActivity"></activity>
     </application>
     <uses-permission android:name="android.permission.INTERNET"/>
 

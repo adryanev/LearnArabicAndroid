@@ -17,6 +17,7 @@ import android.view.MenuItem;
 
 import com.inkubator.adryan.learnarabic.R;
 import com.inkubator.adryan.learnarabic.fragment.FragmentDefault;
+import com.inkubator.adryan.learnarabic.fragment.FragmentUjian;
 import com.inkubator.adryan.learnarabic.fragment.MateriFragment;
 
 public class MainActivity extends AppCompatActivity
@@ -86,12 +87,11 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_home) {
-            // Handle the camera action
             fragment = new FragmentDefault();
         } else if (id == R.id.nav_materi) {
             fragment = new MateriFragment();
         } else if (id == R.id.nav_ujian) {
-
+            fragment = new FragmentUjian();
         } else if (id == R.id.nav_profil) {
 
         }

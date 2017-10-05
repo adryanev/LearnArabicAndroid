@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginBottom="20dp"
+    android:orientation="vertical"
+    >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="50dp">
+
+        <TextView
+            android:id="@+id/tv_info_ujian"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:text="Anda Akan mengerjakan Ujian, apakah anda yakin?"
+            android:textSize="12pt"
+            android:textAlignment="center" />
+
+        <Button
+            android:id="@+id/btn_kerjakan"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/tv_info_ujian"
+            android:layout_marginTop="30dp"
+            android:text="Ikuti Ujian" />
+    </RelativeLayout>
+
+</LinearLayout>
