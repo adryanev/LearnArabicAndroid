@@ -1,0 +1,65 @@
+package com.inkubator.adryan.learnarabic.adapter;
+
+import android.content.Context;
+import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+
+import com.inkubator.adryan.learnarabic.R;
+import com.inkubator.adryan.learnarabic.model.MateriDetail;
+import com.squareup.picasso.Picasso;
+
+import java.util.List;
+
+/**
+ * Created by adryanev on 05/10/17.
+ */
+
+public class MateriAdapter extends RecyclerView.Adapter<MateriAdapter.MateriViewHolder> {
+
+    private List<MateriDetail> materiDetailsList;
+    private Context context;
+
+    public static class MateriViewHolder extends RecyclerView.ViewHolder {
+        LinearLayout materiLayout;
+        ImageView gambar;
+        TextView arab;
+        TextView terjemahan;
+        public MateriViewHolder(View itemView) {
+            super(itemView);
+            materiLayout = (LinearLayout) itemView.findViewById(R.id.materi_layout);
+            gambar = (ImageView) itemView.findViewById(R.id.iv_materi);
+            arab = (TextView) itemView.findViewById(R.id.tv_arab);
+            terjemahan = (TextView) itemView.findViewById(R.id.tv_terjemahan);
+        }
+    }
+
+    public MateriAdapter(List<MateriDetail> materiDetails,  Context context){
+
+        this.materiDetailsList = materiDetails;
+        this.context = context;
+    }
+
+    @Override
+    public MateriViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(context).inflate(R.layout.materi_detail_card_view,parent,false);
+        return new MateriViewHolder(view);
+    }
+
+    @Override
+    public void onBindViewHolder(MateriViewHolder holder, int position) {
+        MateriDetail materiDetail = materiDetailsList.get(position);
+        Picasso.with(context).load(materiDetail.getGambar()).into(holder.gambar);
+        holder.arab.setText(materiDetail.getIsi());
+        holder.terjemahan.setText(materiDetail.getTerjemahan());
+    }
+
+    @Override
+    public int getItemCount() {
+        return materiDetailsList.size();
+    }
+}
