@@ -19,15 +19,20 @@ import com.inkubator.adryan.learnarabic.R;
 import com.inkubator.adryan.learnarabic.fragment.FragmentDefault;
 import com.inkubator.adryan.learnarabic.fragment.FragmentUjian;
 import com.inkubator.adryan.learnarabic.fragment.MateriFragment;
+import com.inkubator.adryan.learnarabic.utils.SessionManager;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+    SessionManager sessionManager;
     Fragment fragment;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        sessionManager = new SessionManager(getApplicationContext());
+        sessionManager.checkLogin();
+
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.fragment_container, new FragmentDefault());
         transaction.commit();
@@ -71,7 +76,8 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.actionLogout) {
+            sessionManager.logoutUser();
             return true;
         }
 

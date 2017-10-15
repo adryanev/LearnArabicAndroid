@@ -19,7 +19,6 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,7 +29,6 @@ import com.inkubator.adryan.learnarabic.utils.StringEncryption;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -119,6 +117,8 @@ public class RegisterActivity extends AppCompatActivity{
                             RegisterActivity.this.overridePendingTransition(android.R.anim.fade_in,android.R.anim.fade_out);
 
 
+                        }else{
+                            Toast.makeText(context,"Gagal Registrasi User",Toast.LENGTH_SHORT).show();
                         }
                     }catch (JSONException e){
                         e.printStackTrace();
