@@ -127,7 +127,7 @@ public class RegisterActivity extends AppCompatActivity{
                     }
                 }
                 else{
-                    Log.i("debug", "onResponse: GA BERHASIL");
+                    Log.i("debug", "onResponse: Gagal Mengambil JSON");
                     loading.dismiss();
 
                 }

@@ -112,7 +112,6 @@ public class LoginActivity extends AppCompatActivity{
                             session.createLoginSession(stringUsername);
                             Toast.makeText(context,"Sukses Login "+ stringUsername,Toast.LENGTH_SHORT).show();
 
-
                             startActivity(new Intent(context,MainActivity.class));
 
                             LoginActivity.this.overridePendingTransition(android.R.anim.fade_in,android.R.anim.fade_out);

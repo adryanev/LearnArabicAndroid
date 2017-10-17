@@ -12,6 +12,9 @@ public class MateriDetail {
     @SerializedName("idMateriDetail")
     @Expose
     private Integer idMateriDetail;
+    @SerializedName("idKategori")
+    @Expose
+    private Integer idKategori;
     @SerializedName("idMateri")
     @Expose
     private Integer idMateri;
@@ -24,33 +27,64 @@ public class MateriDetail {
     @SerializedName("terjemahan")
     @Expose
     private String terjemahan;
+    @SerializedName("timestamp")
+    @Expose
+    private String timestamp;
 
-    public MateriDetail(Integer idMateriDetail, Integer idMateri, String isi, String gambar, String terjemahan){
-        this.idMateriDetail = idMateriDetail;
-        this.idMateri = idMateri;
-        this.isi = isi;
-        this.gambar = gambar;
-        this.terjemahan = terjemahan;
+    public Integer getIdMateriDetail() {
+        return idMateriDetail;
     }
 
-    public Integer getIdMateriDetail(){
-        return this.idMateriDetail;
+    public void setIdMateriDetail(Integer idMateriDetail) {
+        this.idMateriDetail = idMateriDetail;
+    }
+
+    public Integer getIdKategori() {
+        return idKategori;
+    }
+
+    public void setIdKategori(Integer idKategori) {
+        this.idKategori = idKategori;
     }
 
     public Integer getIdMateri() {
         return idMateri;
     }
 
-    public String getGambar() {
-        String url = ServerConfig.IMAGE_FOLDER;
-        return url+gambar;
+    public void setIdMateri(Integer idMateri) {
+        this.idMateri = idMateri;
     }
 
     public String getIsi() {
         return isi;
     }
 
+    public void setIsi(String isi) {
+        this.isi = isi;
+    }
+
+    public String getGambar() {
+        return gambar;
+    }
+
+    public void setGambar(String gambar) {
+        this.gambar = gambar;
+    }
+
     public String getTerjemahan() {
         return terjemahan;
     }
+
+    public void setTerjemahan(String terjemahan) {
+        this.terjemahan = terjemahan;
+    }
+
+    public String getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(String timestamp) {
+        this.timestamp = timestamp;
+    }
+
 }

@@ -80,6 +80,9 @@ public class MainActivity extends AppCompatActivity
             sessionManager.logoutUser();
             return true;
         }
+        if (id == R.id.sync){
+            //TODO: Create database Sync
+        }
 
         return super.onOptionsItemSelected(item);
     }
@@ -102,6 +105,7 @@ public class MainActivity extends AppCompatActivity
 
         }
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.setCustomAnimations(android.R.anim.slide_out_right,android.R.anim.slide_in_left);
         transaction.addToBackStack(null);
         transaction.replace(R.id.fragment_container,fragment);
         transaction.commit();

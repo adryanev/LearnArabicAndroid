@@ -12,6 +12,9 @@ public class Soal {
     @SerializedName("idSoal")
     @Expose
     private Integer idSoal;
+    @SerializedName("gambar")
+    @Expose
+    private String gambar;
     @SerializedName("soal")
     @Expose
     private String soal;
@@ -31,9 +34,23 @@ public class Soal {
     @Expose
     private String jawaban;
 
+    @SerializedName("timestamp")
+    @Expose
+    private String timestamp;
+
     public Integer getIdSoal(){
         return this.idSoal;
     }
+
+    public void setIdSoal(Integer idSoal){this.idSoal = idSoal;}
+    public void setGambar(String gambar){this.gambar = gambar;}
+    public void setSoal(String soal){this.soal = soal;}
+    public void setA(String a){this.a = a;}
+    public void setB(String b){this.b = b;}
+    public void setC(String c){this.c = c;}
+    public void setD(String d){this.d = d;}
+    public void setJawaban(String jawaban){this.jawaban = jawaban;}
+    public void setTimestamp(String timestamp){this.timestamp = timestamp;}
 
     public String getSoal(){
         return this.soal;
@@ -53,4 +70,6 @@ public class Soal {
     public String getJawaban(){
         return this.jawaban;
     }
+    public String getGambar(){return this.gambar;}
+    public String getTimestamp(){return this.timestamp;}
 }
