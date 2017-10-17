@@ -12,7 +12,7 @@
         android:layout_marginBottom="10dp">
 
         <Button
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:background="@color/cardview_light_background"
             android:text="Jawaban A"
@@ -21,9 +21,10 @@
             android:layout_weight="1"
             android:id="@+id/jawabanA"
             android:layout_marginRight="10dp"
+            android:onClick="onClick"
             />
         <Button
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:background="@color/cardview_light_background"
             android:text="Jawaban B"
@@ -31,7 +32,8 @@
             android:padding="30dp"
             android:layout_weight="1"
             android:id="@+id/jawabanB"
-            android:layout_marginLeft="10dp"/>
+            android:layout_marginLeft="10dp"
+            android:onClick="onClick"/>
 
 
     </LinearLayout>
@@ -44,7 +46,7 @@
 
 
         <Button
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:background="@color/cardview_light_background"
             android:text="Jawaban C"
@@ -53,9 +55,10 @@
             android:layout_weight="1"
             android:id="@+id/jawabanC"
             android:layout_marginRight="10dp"
+            android:onClick="onClick"
             />
         <Button
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:background="@color/cardview_light_background"
             android:text="Jawaban D"
@@ -63,7 +66,8 @@
             android:padding="30dp"
             android:layout_weight="1"
             android:id="@+id/jawabanD"
-            android:layout_marginLeft="10dp"/>
+            android:layout_marginLeft="10dp"
+            android:onClick="onClick"/>
 
 
 </LinearLayout>

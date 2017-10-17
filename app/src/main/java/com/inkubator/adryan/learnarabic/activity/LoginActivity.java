@@ -77,6 +77,7 @@ public class LoginActivity extends AppCompatActivity{
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(getApplicationContext(),RegisterActivity.class);
+                i.setFlags(i.getFlags() | Intent.FLAG_ACTIVITY_NO_HISTORY);
                  startActivity(i);
                  LoginActivity.this.overridePendingTransition(android.R.anim.fade_in,android.R.anim.fade_out);
 

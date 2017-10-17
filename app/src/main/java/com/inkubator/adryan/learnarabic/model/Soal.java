@@ -2,6 +2,7 @@ package com.inkubator.adryan.learnarabic.model;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.inkubator.adryan.learnarabic.config.ServerConfig;
 
 /**
  * Created by Adryan Eka Vandra on 10/6/2017.
@@ -70,6 +71,6 @@ public class Soal {
     public String getJawaban(){
         return this.jawaban;
     }
-    public String getGambar(){return this.gambar;}
+    public String getGambar(){return ServerConfig.IMAGE_FOLDER+this.gambar;}
     public String getTimestamp(){return this.timestamp;}
 }

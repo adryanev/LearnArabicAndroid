@@ -17,13 +17,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingBottom="10dp"
-                android:padding="10dp"/>
+                android:padding="10dp"
+                android:id="@+id/gambarSoal"/>
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="10dp"
                 android:textAlignment="center"
-                android:text="Text Soal"/>
+                android:text="Text Soal"
+                android:id="@+id/textSoal"/>
 
         </LinearLayout>
 

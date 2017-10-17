@@ -1,5 +1,8 @@
 package com.inkubator.adryan.learnarabic.activity;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -20,6 +23,7 @@ import com.inkubator.adryan.learnarabic.fragment.FragmentDefault;
 import com.inkubator.adryan.learnarabic.fragment.FragmentUjian;
 import com.inkubator.adryan.learnarabic.fragment.MateriFragment;
 import com.inkubator.adryan.learnarabic.utils.SessionManager;
+import com.inkubator.adryan.learnarabic.utils.SyncManager;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -81,10 +85,15 @@ public class MainActivity extends AppCompatActivity
             return true;
         }
         if (id == R.id.sync){
-            //TODO: Create database Sync
+            syncDatabase();
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void syncDatabase() {
+        SyncManager syncManager = new SyncManager();
+        syncManager.syncAll();
     }
 
     @SuppressWarnings("StatementWithEmptyBody")
@@ -113,5 +122,13 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    public boolean checkConnectivity(){
+        ConnectivityManager connectivityManager = (ConnectivityManager) this.getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+
+        return (networkInfo !=null && networkInfo.isConnected());
+
     }
 }

@@ -7,12 +7,14 @@ import com.inkubator.adryan.learnarabic.model.Materi;
 import com.inkubator.adryan.learnarabic.model.Soal;
 import com.inkubator.adryan.learnarabic.response.ResponseMateri;
 import com.inkubator.adryan.learnarabic.response.ResponseMateriDetail;
+import com.inkubator.adryan.learnarabic.response.ResponseSoal;
 import com.inkubator.adryan.learnarabic.response.ResponseUjian;
 
 import java.util.HashMap;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
+import retrofit2.Response;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
@@ -27,7 +29,7 @@ public interface ApiInterface {
     @GET("materi")
     Call<ResponseMateri> getMateri();
     @GET("soal")
-    Call<Soal> getSoal();
+    Call<ResponseSoal> getSoal();
 
     @FormUrlEncoded
     @POST("register/register-user")
