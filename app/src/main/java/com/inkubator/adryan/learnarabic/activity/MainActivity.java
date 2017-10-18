@@ -1,8 +1,13 @@
-package com.inkubator.adryan.learnarabic;
+package com.inkubator.adryan.learnarabic.activity;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -13,24 +18,32 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.inkubator.adryan.learnarabic.R;
+import com.inkubator.adryan.learnarabic.fragment.FragmentDefault;
+import com.inkubator.adryan.learnarabic.fragment.FragmentUjian;
+import com.inkubator.adryan.learnarabic.fragment.MateriFragment;
+import com.inkubator.adryan.learnarabic.utils.SessionManager;
+import com.inkubator.adryan.learnarabic.utils.SyncManager;
+
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+    SessionManager sessionManager;
+    Fragment fragment;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        sessionManager = new SessionManager(getApplicationContext());
+        sessionManager.checkLogin();
+
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.fragment_container, new FragmentDefault());
+        transaction.commit();
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -67,35 +80,55 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.actionLogout) {
+            sessionManager.logoutUser();
             return true;
+        }
+        if (id == R.id.sync){
+            syncDatabase();
         }
 
         return super.onOptionsItemSelected(item);
     }
 
+    private void syncDatabase() {
+        SyncManager syncManager = new SyncManager();
+        syncManager.syncAll();
+    }
+
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
+
+        fragment = null;
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
-
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
+        if (id == R.id.nav_home) {
+            fragment = new FragmentDefault();
+        } else if (id == R.id.nav_materi) {
+            fragment = new MateriFragment();
+        } else if (id == R.id.nav_ujian) {
+            fragment = new FragmentUjian();
+        } else if (id == R.id.nav_profil) {
 
         }
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.setCustomAnimations(android.R.anim.slide_out_right,android.R.anim.slide_in_left);
+        transaction.addToBackStack(null);
+        transaction.replace(R.id.fragment_container,fragment);
+        transaction.commit();
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    public boolean checkConnectivity(){
+        ConnectivityManager connectivityManager = (ConnectivityManager) this.getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+
+        return (networkInfo !=null && networkInfo.isConnected());
+
     }
 }
