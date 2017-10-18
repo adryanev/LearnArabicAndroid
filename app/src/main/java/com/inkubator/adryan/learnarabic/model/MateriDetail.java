@@ -64,7 +64,7 @@ public class MateriDetail {
     }
 
     public String getGambar() {
-        return ServerConfig.IMAGE_FOLDER+gambar;
+        return gambar;
     }
 
     public void setGambar(String gambar) {

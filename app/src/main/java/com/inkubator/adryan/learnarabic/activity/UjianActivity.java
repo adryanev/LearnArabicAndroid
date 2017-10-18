@@ -2,12 +2,19 @@ package com.inkubator.adryan.learnarabic.activity;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.ContextWrapper;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.text.BidiFormatter;
+import android.text.TextDirectionHeuristic;
+import android.text.TextDirectionHeuristics;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
@@ -19,6 +26,7 @@ import android.widget.TextView;
 
 import com.inkubator.adryan.learnarabic.R;
 import com.inkubator.adryan.learnarabic.adapter.MateriDetailAdapter;
+import com.inkubator.adryan.learnarabic.config.ServerConfig;
 import com.inkubator.adryan.learnarabic.model.MateriDetail;
 import com.inkubator.adryan.learnarabic.model.Soal;
 import com.inkubator.adryan.learnarabic.response.ResponseMateriDetail;
@@ -26,10 +34,15 @@ import com.inkubator.adryan.learnarabic.response.ResponseSoal;
 import com.inkubator.adryan.learnarabic.rest.ApiClient;
 import com.inkubator.adryan.learnarabic.rest.ApiInterface;
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 
 import org.w3c.dom.Text;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.List;
+import java.util.Locale;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -99,8 +112,9 @@ public class UjianActivity extends AppCompatActivity implements View.OnClickList
             pb.setProgress((currentQue*100)/listSoalUjian.size());
             noSoal.setText(currentQue+"/"+listSoalUjian.size());
             soalSekarang = listSoalUjian.get(currentQue-1);
+
             textSoal.setText(soalSekarang.getSoal());
-            Picasso.with(getApplicationContext()).load(soalSekarang.getGambar()).resize(300,300).into(gambarSoal);
+            Picasso.with(getApplicationContext()).load(ServerConfig.IMAGE_FOLDER+soalSekarang.getGambar()).resize(300,300).into(gambarSoal);
 
             a.setText("A. "+soalSekarang.getA());
             b.setText("B. "+soalSekarang.getB());
@@ -142,7 +156,7 @@ public class UjianActivity extends AppCompatActivity implements View.OnClickList
 
     private void sendResult() {
         Intent i = new Intent(getApplicationContext(),HasilActivity.class);
-        i.putExtra("score",score);
+        i.putExtra("score",score>100? 100: score);
         startActivity(i);
     }
 
@@ -226,7 +240,7 @@ public class UjianActivity extends AppCompatActivity implements View.OnClickList
         }
 
         if(ans.equalsIgnoreCase(soalSekarang.getJawaban())){
-            score += 100/listSoalUjian.size();
+            score += Math.ceil(100/listSoalUjian.size());
         }
 
         countDownTimer.cancel();
@@ -255,4 +269,5 @@ public class UjianActivity extends AppCompatActivity implements View.OnClickList
         Log.d("RES", "onCheckedChanged: " + ans + "[" + score + "]");
 
     }
+
 }

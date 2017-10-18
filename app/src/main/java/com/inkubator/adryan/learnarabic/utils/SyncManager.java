@@ -4,7 +4,11 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
+import android.support.annotation.NonNull;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.inkubator.adryan.learnarabic.adapter.MateriDetailAdapter;
 import com.inkubator.adryan.learnarabic.database.DbHelper;
@@ -18,7 +22,12 @@ import com.inkubator.adryan.learnarabic.response.ResponseMateriDetail;
 import com.inkubator.adryan.learnarabic.response.ResponseSoal;
 import com.inkubator.adryan.learnarabic.rest.ApiClient;
 import com.inkubator.adryan.learnarabic.rest.ApiInterface;
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,6 +57,7 @@ public class SyncManager extends ContextWrapper {
         syncMateri();
         syncMateriDetail();
         syncSoal();
+        Toast.makeText(this,"Sinkronisasi selesai",Toast.LENGTH_SHORT).show();
         
     }
 
@@ -173,6 +183,7 @@ public class SyncManager extends ContextWrapper {
                         db.createSoal(soal);
                         Log.d(TAG,"Insert Soal "+soal.getIdSoal().toString());
 
+
                     }
                     pb.dismiss();
                 }
@@ -189,5 +200,46 @@ public class SyncManager extends ContextWrapper {
                 Log.e(TAG, t.toString());
             }
         });
+
+
+    }
+    @NonNull
+    private Target picassoImageTarget(Context context, final String imageDir, final String imageName) {
+        Log.d("picassoImageTarget", " picassoImageTarget");
+        ContextWrapper cw = new ContextWrapper(context);
+        final File directory = cw.getDir(imageDir, Context.MODE_PRIVATE); // path to /data/data/yourapp/app_imageDir
+        return new Target() {
+            @Override
+            public void onBitmapLoaded(final Bitmap bitmap, Picasso.LoadedFrom from) {
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        final File myImageFile = new File(directory, imageName); // Create image file
+                        FileOutputStream fos = null;
+                        try {
+                            fos = new FileOutputStream(myImageFile);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        } finally {
+                            try {
+                                fos.close();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        Log.i("image", "image saved to >>>" + myImageFile.getAbsolutePath());
+
+                    }
+                }).start();
+            }
+
+            @Override
+            public void onBitmapFailed(Drawable errorDrawable) {
+            }
+            @Override
+            public void onPrepareLoad(Drawable placeHolderDrawable) {
+                if (placeHolderDrawable != null) {}
+            }
+        };
     }
 }

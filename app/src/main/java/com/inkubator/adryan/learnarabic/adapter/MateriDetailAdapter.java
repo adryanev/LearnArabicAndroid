@@ -10,6 +10,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.inkubator.adryan.learnarabic.R;
+import com.inkubator.adryan.learnarabic.config.ServerConfig;
 import com.inkubator.adryan.learnarabic.model.MateriDetail;
 import com.squareup.picasso.Picasso;
 
@@ -53,7 +54,7 @@ public class MateriDetailAdapter extends RecyclerView.Adapter<MateriDetailAdapte
     @Override
     public void onBindViewHolder(MateriDetailViewHolder holder, int position) {
         MateriDetail materiDetail = materiDetailsList.get(position);
-        Picasso.with(context).load(materiDetail.getGambar()).resize(300,300).centerCrop().into(holder.gambar);
+        Picasso.with(context).load(ServerConfig.IMAGE_FOLDER+materiDetail.getGambar()).resize(300,300).centerCrop().into(holder.gambar);
         holder.arab.setText(materiDetail.getIsi());
         holder.terjemahan.setText(materiDetail.getTerjemahan());
     }

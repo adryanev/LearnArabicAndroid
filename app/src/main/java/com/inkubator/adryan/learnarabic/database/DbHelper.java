@@ -411,6 +411,33 @@ public class DbHelper extends SQLiteOpenHelper {
         return idsoal;
     }
 
+    public List<Soal> getAllSoal(){
+        List<Soal> soals = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        String sqlQuery = "SELECT * FROM "+TABLE_SOAL;
+        Log.e(LOG,sqlQuery);
+
+        Cursor c = db.rawQuery(sqlQuery,null);
+
+        if(c.moveToFirst()){
+            do{
+                Soal soal = new Soal();
+                soal.setIdSoal(c.getInt(c.getColumnIndex(KEY_IDSOAL)));
+                soal.setGambar(c.getString(c.getColumnIndex(KEY_GAMBAR)));
+                soal.setSoal(c.getString(c.getColumnIndex(KEY_SOAL)));
+                soal.setA(c.getString(c.getColumnIndex(KEY_A)));
+                soal.setB(c.getString(c.getColumnIndex(KEY_B)));
+                soal.setC(c.getString(c.getColumnIndex(KEY_C)));
+                soal.setD(c.getString(c.getColumnIndex(KEY_D)));
+                soal.setJawaban(c.getString(c.getColumnIndex(KEY_JAWABAN)));
+                soal.setTimestamp(c.getString(c.getColumnIndex(KEY_TIMESTAMP)));
+
+                soals.add(soal);
+
+            }while(c.moveToNext());
+        }
+        return soals;
+    }
     public List<Soal> getSoalByLimit(Long limit){
         List<Soal> soals = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();

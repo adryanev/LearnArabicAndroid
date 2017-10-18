@@ -71,6 +71,6 @@ public class Soal {
     public String getJawaban(){
         return this.jawaban;
     }
-    public String getGambar(){return ServerConfig.IMAGE_FOLDER+this.gambar;}
+    public String getGambar(){return this.gambar;}
     public String getTimestamp(){return this.timestamp;}
 }
