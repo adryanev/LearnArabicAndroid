@@ -1,12 +1,49 @@
 package com.inkubator.adryan.learnarabic.utils;
 
+import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.ContextWrapper;
+import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
+
+import com.inkubator.adryan.learnarabic.adapter.MateriDetailAdapter;
+import com.inkubator.adryan.learnarabic.database.DbHelper;
+import com.inkubator.adryan.learnarabic.model.Kategori;
+import com.inkubator.adryan.learnarabic.model.Materi;
+import com.inkubator.adryan.learnarabic.model.MateriDetail;
+import com.inkubator.adryan.learnarabic.model.Soal;
+import com.inkubator.adryan.learnarabic.response.ResponseKategori;
+import com.inkubator.adryan.learnarabic.response.ResponseMateri;
+import com.inkubator.adryan.learnarabic.response.ResponseMateriDetail;
+import com.inkubator.adryan.learnarabic.response.ResponseSoal;
+import com.inkubator.adryan.learnarabic.rest.ApiClient;
+import com.inkubator.adryan.learnarabic.rest.ApiInterface;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 /**
  * Created by adryanev on 17/10/17.
  */
 
-public class SyncManager {
-    
+public class SyncManager extends ContextWrapper {
+
+    private ProgressDialog pb;
+    private static final String TAG = SyncManager.class.getSimpleName();
+
+
+    private DbHelper db;
+    public SyncManager(Context context){
+        super(context);
+        this.db = new DbHelper(this);
+    }
     public void syncAll(){
+        pb = new ProgressDialog(this);
+        pb.setCancelable(false);
         syncKategori();
         syncMateri();
         syncMateriDetail();
@@ -15,15 +52,142 @@ public class SyncManager {
     }
 
     private void syncMateriDetail() {
+        pb.setMessage("Sinkronisasi Materi Detail");
+        pb.show();
+        ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
+        Call<ResponseMateriDetail> call = apiService.getAllMateriDetail();
+        call.enqueue(new Callback<ResponseMateriDetail>() {
+            @Override
+            public void onResponse(Call<ResponseMateriDetail> call, Response<ResponseMateriDetail> response) {
+
+                if(response.isSuccessful()){
+                    List<MateriDetail> materiDetails = response.body().getMateriDetails();
+                    Log.d(TAG,"Succes receiving: "+materiDetails.size());
+                    db.truncateTable("materi_detail");
+                    for (MateriDetail materidetail: materiDetails) {
+                        db.createMateriDetail(materidetail);
+                        Log.d(TAG,"Insert Materi detail "+materidetail.getIdMateriDetail().toString());
+
+                    }
+                    pb.dismiss();
+                }
+                else{
+                    int statusCode  = response.code();
+                    // handle request errors depending on status code
+                    Log.d(TAG,"Gagal, Error Code ="+statusCode);
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<ResponseMateriDetail> call, Throwable t) {
+                Log.e(TAG, t.toString());
+            }
+        });
         
     }
 
     private void syncKategori() {
+        pb.setMessage("Sinkronisasi Kategori");
+        pb.show();
+        ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
+        Call<ResponseKategori> call = apiService.getKategori();
+        call.enqueue(new Callback<ResponseKategori>() {
+            @Override
+            public void onResponse(Call<ResponseKategori> call, Response<ResponseKategori> response) {
+
+                if(response.isSuccessful()){
+                    List<Kategori> kategoris = response.body().getKategoris();
+                    Log.d(TAG,"Succes receiving: "+kategoris.size());
+                    db.truncateTable("kategori");
+                    for (Kategori kategori: kategoris) {
+                        db.createKategori(kategori);
+                        Log.d(TAG,"Insert Materi Detail "+kategori.getIdKategori().toString());
+                    }
+                    pb.dismiss();
+                }
+                else{
+                    int statusCode  = response.code();
+                    // handle request errors depending on status code
+                    Log.d(TAG,"Gagal, Error Code ="+statusCode);
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<ResponseKategori> call, Throwable t) {
+                Log.e(TAG, t.toString());
+            }
+        });
+
     }
 
     private void syncMateri() {
+        pb.setMessage("Sinkronisasi Materi");
+        pb.show();
+        ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
+        Call<ResponseMateri> call = apiService.getMateri();
+        call.enqueue(new Callback<ResponseMateri>() {
+            @Override
+            public void onResponse(Call<ResponseMateri> call, Response<ResponseMateri> response) {
+
+                if(response.isSuccessful()){
+                    List<Materi> materi = response.body().getMateri();
+                    Log.d(TAG,"Succes receiving: "+materi.size());
+                    db.truncateTable("materi");
+                    for (Materi materi1: materi) {
+                        db.createMateri(materi1);
+                        Log.d(TAG,"Insert Materi "+materi1.getIdMateri().toString());
+                    }
+                    pb.dismiss();
+                }
+                else{
+                    int statusCode  = response.code();
+                    // handle request errors depending on status code
+                    Log.d(TAG,"Gagal, Error Code ="+statusCode);
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<ResponseMateri> call, Throwable t) {
+                Log.e(TAG, t.toString());
+            }
+        });
     }
 
     private void syncSoal() {
+        pb.setMessage("Sinkronisasi Soal");
+        pb.show();
+        ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
+        Call<ResponseSoal> call = apiService.getSoal();
+        call.enqueue(new Callback<ResponseSoal>() {
+            @Override
+            public void onResponse(Call<ResponseSoal> call, Response<ResponseSoal> response) {
+
+                if(response.isSuccessful()){
+                    List<Soal> soals = response.body().getSoal();
+                    Log.d(TAG,"Succes receiving: "+soals.size());
+                    db.truncateTable("soal");
+                    for (Soal soal: soals) {
+                        db.createSoal(soal);
+                        Log.d(TAG,"Insert Soal "+soal.getIdSoal().toString());
+
+                    }
+                    pb.dismiss();
+                }
+                else{
+                    int statusCode  = response.code();
+                    // handle request errors depending on status code
+                    Log.d(TAG,"Gagal, Error Code ="+statusCode);
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<ResponseSoal> call, Throwable t) {
+                Log.e(TAG, t.toString());
+            }
+        });
     }
 }

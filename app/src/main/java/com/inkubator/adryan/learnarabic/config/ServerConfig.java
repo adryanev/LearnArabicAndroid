@@ -6,7 +6,7 @@ package com.inkubator.adryan.learnarabic.config;
 
 public class ServerConfig {
 
-    private static String server = "http://192.168.8.100/learn-arabic";
+    private static String server = "http://192.168.8.101/learn-arabic";
     public static final String WEB_SERVER = server+"/web/";
     public static final String API_ENDPOINT = server+"/api/v1/";
     public static final String IMAGE_FOLDER = WEB_SERVER+"uploads/images/";

@@ -27,7 +27,7 @@ public class DbHelper extends SQLiteOpenHelper {
     private static final String LOG = "DbHelper";
 
     //versi database
-    private static final Integer DATABASE_VERSION = 1;
+    private static final Integer DATABASE_VERSION = 2;
 
     //nama database
     private static final String DATABASE_NAME = "app-learning";
@@ -66,20 +66,20 @@ public class DbHelper extends SQLiteOpenHelper {
 
     //Create table Statement
     //tabel kategori
-    private static final String CREATE_TABLE_KATEGORI = "CREATE TABLE IF NOT EXIST "+TABLE_KATEGORI+" ( " +
+    private static final String CREATE_TABLE_KATEGORI = "CREATE TABLE  "+TABLE_KATEGORI+" ( " +
             KEY_IDKATEGORI+" INTEGER PRIMARY KEY," +
             KEY_NAMAKATEGORI+" TEXT, "+
             KEY_TIMESTAMP+" DATETIME)";
 
     //tabel materi
-    private static final String CREATE_TABLE_MATERI = "CREATE TABLE IF NOT EXIST "+TABLE_MATERI+" ( "+
+    private static final String CREATE_TABLE_MATERI = "CREATE TABLE  "+TABLE_MATERI+" ( "+
             KEY_IDMATERI+" INTEGER PRIMARY KEY," +
             KEY_NAMAMATERI+" TEXT, "+
-            KEY_IDKATEGORI+" INTEGER"+
+            KEY_IDKATEGORI+" INTEGER,"+
             KEY_TIMESTAMP+" DATETIME)";
 
     //tabel materi-detail
-    private static final String CREATE_TABLE_MATERI_DETAIL = "CREATE TABLE IF NOT EXIST "+TABLE_MATERI_DETAIL+" ( " +
+    private static final String CREATE_TABLE_MATERI_DETAIL = "CREATE TABLE  "+TABLE_MATERI_DETAIL+" ( " +
             KEY_IDMATERI_DETAIL+" INTEGER PRIMARY KEY," +
             KEY_IDKATEGORI+" INTEGER,"+
             KEY_IDMATERI+" INTEGER,"+
@@ -94,11 +94,11 @@ public class DbHelper extends SQLiteOpenHelper {
             "FOREIGN KEY ("+KEY_IDMATERI+")"+
             "REFERENCES "+TABLE_MATERI+"("+KEY_IDMATERI+")"+
             "ON UPDATE CASCADE "+
-            "ON DELETE CASCADE,"+
+            "ON DELETE CASCADE"+
             ")";
 
     //tabel soal
-    private static final String CREATE_TABLE_SOAL = "CREATE TABLE IF NOT EXIST "+TABLE_SOAL+" ( "+
+    private static final String CREATE_TABLE_SOAL = "CREATE TABLE "+TABLE_SOAL+" ( "+
             KEY_IDSOAL+" INTEGER PRIMARY KEY," +
             KEY_GAMBAR+" TEXT, "+
             KEY_SOAL+" TEXT, "+
@@ -110,7 +110,7 @@ public class DbHelper extends SQLiteOpenHelper {
             KEY_TIMESTAMP+" DATETIME)";
 
 
-    public DbHelper(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
+    public DbHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
@@ -118,9 +118,13 @@ public class DbHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
 
         db.execSQL(CREATE_TABLE_KATEGORI);
+        Log.d(LOG,"Create table "+TABLE_KATEGORI);
         db.execSQL(CREATE_TABLE_MATERI);
+        Log.d(LOG,"Create table "+TABLE_MATERI);
         db.execSQL(CREATE_TABLE_MATERI_DETAIL);
+        Log.d(LOG,"Create table "+TABLE_MATERI_DETAIL);
         db.execSQL(CREATE_TABLE_SOAL);
+        Log.d(LOG,"Create table "+TABLE_SOAL);
     }
 
     @Override
@@ -143,13 +147,14 @@ public class DbHelper extends SQLiteOpenHelper {
      */
 
     public Long createKategori(Kategori kategori){
-        SQLiteDatabase db = this.getReadableDatabase();
+
+        SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(KEY_IDKATEGORI,kategori.getIdKategori());
         values.put(KEY_NAMAKATEGORI,kategori.getNamaKategori());
         values.put(KEY_TIMESTAMP,kategori.getTimestamp());
-
         Long kategori_id = db.insert(TABLE_KATEGORI,null,values);
+        Log.d(LOG,"INSERT KATEGORI "+kategori.getIdKategori().toString()+" to Table");
         return kategori_id;
     }
 
@@ -248,6 +253,7 @@ public class DbHelper extends SQLiteOpenHelper {
      */
 
     public Long createMateri(Materi materi){
+
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
         cv.put(KEY_IDMATERI, materi.getIdMateri());
@@ -256,6 +262,7 @@ public class DbHelper extends SQLiteOpenHelper {
         cv.put(KEY_TIMESTAMP,materi.getTimestamp());
 
         Long idkat= db.insert(TABLE_MATERI,null,cv);
+        Log.d(LOG,"INSERT MATERI "+materi.getIdMateri().toString()+" to Table");
 
         return idkat;
     }
@@ -324,6 +331,7 @@ public class DbHelper extends SQLiteOpenHelper {
     //--------------------------------METHOD TABEL MATERI DETAIL --------------------------------------//
 
     public Long createMateriDetail(MateriDetail materiDetail){
+
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
         cv.put(KEY_IDMATERI_DETAIL,materiDetail.getIdMateriDetail());
@@ -335,6 +343,7 @@ public class DbHelper extends SQLiteOpenHelper {
         cv.put(KEY_TIMESTAMP,materiDetail.getTimestamp());
 
         Long idMateriDetail = db.insert(TABLE_MATERI_DETAIL,null,cv);
+        Log.d(LOG,"INSERT MATERI DETAIL "+materiDetail.getIdMateriDetail().toString()+" to Table");
         return idMateriDetail;
 
     }
@@ -397,6 +406,7 @@ public class DbHelper extends SQLiteOpenHelper {
         cv.put(KEY_TIMESTAMP,soal.getTimestamp());
 
         Long idsoal = db.insert(TABLE_SOAL,null,cv);
+        Log.d(LOG,"INSERT KATEGORI "+soal.getIdSoal().toString()+" to Table");
 
         return idsoal;
     }
@@ -451,5 +461,11 @@ public class DbHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
         if (db != null && db.isOpen())
             db.close();
+    }
+
+    public void truncateTable(String tableName){
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(tableName,null,null);
+
     }
 }

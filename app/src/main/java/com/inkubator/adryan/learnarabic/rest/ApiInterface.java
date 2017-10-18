@@ -5,6 +5,7 @@ package com.inkubator.adryan.learnarabic.rest;
  */
 import com.inkubator.adryan.learnarabic.model.Materi;
 import com.inkubator.adryan.learnarabic.model.Soal;
+import com.inkubator.adryan.learnarabic.response.ResponseKategori;
 import com.inkubator.adryan.learnarabic.response.ResponseMateri;
 import com.inkubator.adryan.learnarabic.response.ResponseMateriDetail;
 import com.inkubator.adryan.learnarabic.response.ResponseSoal;
@@ -26,10 +27,15 @@ public interface ApiInterface {
 
     @GET("materi-detail/detail")
     Call<ResponseMateriDetail> getMateriDetailByIdMateri(@QueryMap HashMap<String,Integer> idMateri);
+
+    @GET("materi-detail")
+    Call<ResponseMateriDetail> getAllMateriDetail();
     @GET("materi")
     Call<ResponseMateri> getMateri();
     @GET("soal")
     Call<ResponseSoal> getSoal();
+    @GET("kategori")
+    Call<ResponseKategori> getKategori();
 
     @FormUrlEncoded
     @POST("register/register-user")

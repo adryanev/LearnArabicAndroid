@@ -14,10 +14,7 @@
             android:id="@+id/nav_ujian"
             android:icon="@drawable/ic_question_answer_black_24dp"
             android:title="Ujian" />
-        <item
-            android:id="@+id/nav_profil"
-            android:icon="@drawable/ic_person_black_24dp"
-            android:title="Profil" />
+        
     </group>
 
 </menu>

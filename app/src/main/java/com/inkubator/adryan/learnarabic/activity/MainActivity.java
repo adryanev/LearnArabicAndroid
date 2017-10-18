@@ -18,6 +18,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.facebook.stetho.Stetho;
 import com.inkubator.adryan.learnarabic.R;
 import com.inkubator.adryan.learnarabic.fragment.FragmentDefault;
 import com.inkubator.adryan.learnarabic.fragment.FragmentUjian;
@@ -33,6 +34,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Stetho.initializeWithDefaults(this);
         setContentView(R.layout.activity_main);
         sessionManager = new SessionManager(getApplicationContext());
         sessionManager.checkLogin();
@@ -92,7 +94,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void syncDatabase() {
-        SyncManager syncManager = new SyncManager();
+        SyncManager syncManager = new SyncManager(MainActivity.this);
         syncManager.syncAll();
     }
 
@@ -110,8 +112,6 @@ public class MainActivity extends AppCompatActivity
             fragment = new MateriFragment();
         } else if (id == R.id.nav_ujian) {
             fragment = new FragmentUjian();
-        } else if (id == R.id.nav_profil) {
-
         }
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.setCustomAnimations(android.R.anim.slide_out_right,android.R.anim.slide_in_left);

@@ -16,7 +16,7 @@ public class ResponseKategori {
     @Expose
     private List<Kategori> kategoris = null;
 
-    public List<Kategori> getMaster() {
+    public List<Kategori> getKategoris() {
         return kategoris;
     }
 
