@@ -49,7 +49,7 @@ public class MateriDetailActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
         ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
 
-        Call<ResponseMateriDetail> call = apiService.getMateriDetailByIdMateri(params);
+        Call<ResponseMateriDetail> call = apiService.getAllMateriDetail();
         call.enqueue(new Callback<ResponseMateriDetail>() {
             @Override
             public void onResponse(Call<ResponseMateriDetail> call, Response<ResponseMateriDetail> response) {

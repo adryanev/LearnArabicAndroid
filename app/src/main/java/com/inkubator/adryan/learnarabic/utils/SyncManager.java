@@ -3,23 +3,23 @@ package com.inkubator.adryan.learnarabic.utils;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.ContextWrapper;
-import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.inkubator.adryan.learnarabic.adapter.MateriDetailAdapter;
 import com.inkubator.adryan.learnarabic.database.DbHelper;
 import com.inkubator.adryan.learnarabic.model.Kategori;
 import com.inkubator.adryan.learnarabic.model.Materi;
 import com.inkubator.adryan.learnarabic.model.MateriDetail;
 import com.inkubator.adryan.learnarabic.model.Soal;
+import com.inkubator.adryan.learnarabic.model.SubMateri;
 import com.inkubator.adryan.learnarabic.response.ResponseKategori;
 import com.inkubator.adryan.learnarabic.response.ResponseMateri;
 import com.inkubator.adryan.learnarabic.response.ResponseMateriDetail;
 import com.inkubator.adryan.learnarabic.response.ResponseSoal;
+import com.inkubator.adryan.learnarabic.response.ResponseSubMateri;
 import com.inkubator.adryan.learnarabic.rest.ApiClient;
 import com.inkubator.adryan.learnarabic.rest.ApiInterface;
 import com.squareup.picasso.Picasso;
@@ -28,7 +28,6 @@ import com.squareup.picasso.Target;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -55,10 +54,46 @@ public class SyncManager extends ContextWrapper {
         pb.setCancelable(false);
         syncKategori();
         syncMateri();
+        syncSubMater();
         syncMateriDetail();
         syncSoal();
         Toast.makeText(this,"Sinkronisasi selesai",Toast.LENGTH_SHORT).show();
         
+    }
+
+    private void syncSubMater() {
+        pb.setMessage("Sinkronisasi Sub Materi");
+        pb.show();
+        ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
+        Call<ResponseSubMateri> call = apiService.getSubMateri();
+        call.enqueue(new Callback<ResponseSubMateri>() {
+            @Override
+            public void onResponse(Call<ResponseSubMateri> call, Response<ResponseSubMateri> response) {
+
+                if(response.isSuccessful()){
+                    List<SubMateri> subMateri = response.body().getSubMateri();
+                    Log.d(TAG,"Succes receiving: "+subMateri.size());
+                    db.truncateTable("materi_detail");
+                    for (SubMateri subMateri1: subMateri) {
+                        db.createSubMateri(subMateri1);
+                        Log.d(TAG,"Insert Materi detail "+subMateri1.getIdSubMateri().toString());
+
+                    }
+                    pb.dismiss();
+                }
+                else{
+                    int statusCode  = response.code();
+                    // handle request errors depending on status code
+                    Log.d(TAG,"Gagal, Error Code ="+statusCode);
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<ResponseSubMateri> call, Throwable t) {
+                Log.e(TAG, t.toString());
+            }
+        });
     }
 
     private void syncMateriDetail() {

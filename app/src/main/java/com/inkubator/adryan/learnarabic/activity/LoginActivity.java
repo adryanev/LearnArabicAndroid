@@ -13,6 +13,9 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.inkubator.adryan.learnarabic.database.DbHelper;
+import com.inkubator.adryan.learnarabic.model.User;
+import com.inkubator.adryan.learnarabic.response.ResponseLogin;
 import com.inkubator.adryan.learnarabic.rest.ApiClient;
 import com.inkubator.adryan.learnarabic.rest.ApiInterface;
 import com.inkubator.adryan.learnarabic.utils.SessionManager;
@@ -27,6 +30,7 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
+import java.util.List;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -100,31 +104,28 @@ public class LoginActivity extends AppCompatActivity{
         final String stringUsername = username.getText().toString();
         String stringPassword = StringEncryption.SHA1(password.getText().toString());
 
-        apiService.loginRequest(stringUsername, stringPassword).enqueue(new Callback<ResponseBody>() {
+        apiService.loginRequest(stringUsername, stringPassword).enqueue(new Callback<ResponseLogin>() {
             @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+            public void onResponse(Call<ResponseLogin> call, Response<ResponseLogin> response) {
                 if (response.isSuccessful()) {
                     Log.i("Login", "onResponse: Success ");
                     loading.dismiss();
 
-                    try {
-                        JSONObject jsonResult = new JSONObject(response.body().string());
-                        if(jsonResult.getString("status").equals("success")){
-                            session.createLoginSession(stringUsername);
-                            Toast.makeText(context,"Sukses Login "+ stringUsername,Toast.LENGTH_SHORT).show();
+                    String success = response.body().getStatus();
+                    List<User> user = response.body().getData();
+                    if(success.equals("success")){
+                        session.createLoginSession(user.get(0).getUsername(),user.get(0).getPassword(),
+                                user.get(0).getNama(),user.get(0).getEmail(),user.get(0).getTanggalLahir());
 
-                            startActivity(new Intent(context,MainActivity.class));
+                        Toast.makeText(context,"Sukses Login "+ user.get(0).getNama(),Toast.LENGTH_SHORT).show();
 
-                            LoginActivity.this.overridePendingTransition(android.R.anim.fade_in,android.R.anim.fade_out);
+                        startActivity(new Intent(context,MainActivity.class));
+
+                        LoginActivity.this.overridePendingTransition(android.R.anim.fade_in,android.R.anim.fade_out);
 
 
-                        }else{
-                            Toast.makeText(context,"Gagal Registrasi User",Toast.LENGTH_SHORT).show();
-                        }
-                    }catch (JSONException e){
-                        e.printStackTrace();
-                    }catch (IOException e){
-                        e.printStackTrace();
+                    }else{
+                        Toast.makeText(context,"Gagal Registrasi User",Toast.LENGTH_SHORT).show();
                     }
                 }
                 else{
@@ -135,7 +136,7 @@ public class LoginActivity extends AppCompatActivity{
             }
 
             @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
+            public void onFailure(Call<ResponseLogin> call, Throwable t) {
                 Log.e("debug", "onFailure: ERROR > " + t.getMessage());
                 Toast.makeText(context, "Koneksi Internet Bermasalah", Toast.LENGTH_SHORT).show();
             }

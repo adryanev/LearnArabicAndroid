@@ -1,26 +1,34 @@
 package com.inkubator.adryan.learnarabic.model;
 
-/**
- * Created by adryanev on 05/10/17.
- */
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Materi {
+/**
+ * Created by adryanev on 22/10/17.
+ */
 
+public class SubMateri {
 
+    @SerializedName("idSubMateri")
+    @Expose
+    private Integer idSubMateri;
     @SerializedName("idMateri")
     @Expose
     private Integer idMateri;
-    @SerializedName("namaMateri")
-    @Expose
-    private String namaMateri;
     @SerializedName("idKategori")
     @Expose
-    private String idKategori;
+    private Integer idKategori;
     @SerializedName("timestamp")
     @Expose
     private String timestamp;
+
+    public Integer getIdSubMateri() {
+        return idSubMateri;
+    }
+
+    public void setIdSubMateri(Integer idSubMateri) {
+        this.idSubMateri = idSubMateri;
+    }
 
     public Integer getIdMateri() {
         return idMateri;
@@ -30,19 +38,11 @@ public class Materi {
         this.idMateri = idMateri;
     }
 
-    public String getNamaMateri() {
-        return namaMateri;
-    }
-
-    public void setNamaMateri(String namaMateri) {
-        this.namaMateri = namaMateri;
-    }
-
-    public String getIdKategori() {
+    public Integer getIdKategori() {
         return idKategori;
     }
 
-    public void setIdKategori(String idKategori) {
+    public void setIdKategori(Integer idKategori) {
         this.idKategori = idKategori;
     }
 
@@ -53,5 +53,4 @@ public class Materi {
     public void setTimestamp(String timestamp) {
         this.timestamp = timestamp;
     }
-
 }

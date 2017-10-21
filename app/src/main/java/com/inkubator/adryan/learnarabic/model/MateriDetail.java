@@ -12,12 +12,9 @@ public class MateriDetail {
     @SerializedName("idMateriDetail")
     @Expose
     private Integer idMateriDetail;
-    @SerializedName("idKategori")
+    @SerializedName("idSubMateri")
     @Expose
-    private Integer idKategori;
-    @SerializedName("idMateri")
-    @Expose
-    private Integer idMateri;
+    private Integer idSubMateri;
     @SerializedName("isi")
     @Expose
     private String isi;
@@ -39,20 +36,12 @@ public class MateriDetail {
         this.idMateriDetail = idMateriDetail;
     }
 
-    public Integer getIdKategori() {
-        return idKategori;
+    public Integer getIdSubMateri() {
+        return idSubMateri;
     }
 
-    public void setIdKategori(Integer idKategori) {
-        this.idKategori = idKategori;
-    }
-
-    public Integer getIdMateri() {
-        return idMateri;
-    }
-
-    public void setIdMateri(Integer idMateri) {
-        this.idMateri = idMateri;
+    public void setIdSubMateri(Integer idSubMateri) {
+        this.idSubMateri = idSubMateri;
     }
 
     public String getIsi() {

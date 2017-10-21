@@ -28,6 +28,10 @@ public class SessionManager {
     private static final String IS_LOGGED_IN = "isLoggedIn";
 
     private static final String KEY_USERNAME = "username";
+    private static final String KEY_PASSWORD = "password";
+    private static final String KEY_NAMA = "nama";
+    private static final String KEY_EMAIL = "email";
+    private static final String KEY_TANGGAL_LAHIR = "tanggalLahir";
 
 
 
@@ -39,9 +43,13 @@ public class SessionManager {
         editor = sharedPreferences.edit();
     }
 
-    public void createLoginSession(String username){
+    public void createLoginSession(String username, String password, String nama, String email, String tanggalLahir){
         editor.putBoolean(IS_LOGGED_IN,true);
         editor.putString(KEY_USERNAME,username);
+        editor.putString(KEY_PASSWORD,password);
+        editor.putString(KEY_NAMA,nama);
+        editor.putString(KEY_EMAIL,email);
+        editor.putString(KEY_TANGGAL_LAHIR,tanggalLahir);
 
         editor.commit();
     }
@@ -49,6 +57,10 @@ public class SessionManager {
     public HashMap<String,String> getUserDetail(){
         HashMap<String,String> user = new HashMap<>();
         user.put(KEY_USERNAME, sharedPreferences.getString(KEY_USERNAME,null));
+        user.put(KEY_PASSWORD, sharedPreferences.getString(KEY_PASSWORD,null));
+        user.put(KEY_NAMA, sharedPreferences.getString(KEY_NAMA,null));
+        user.put(KEY_EMAIL, sharedPreferences.getString(KEY_EMAIL,null));
+        user.put(KEY_TANGGAL_LAHIR, sharedPreferences.getString(KEY_TANGGAL_LAHIR,null));
 
         return user;
     }

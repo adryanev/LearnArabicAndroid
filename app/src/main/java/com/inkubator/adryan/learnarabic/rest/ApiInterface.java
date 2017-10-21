@@ -6,9 +6,11 @@ package com.inkubator.adryan.learnarabic.rest;
 import com.inkubator.adryan.learnarabic.model.Materi;
 import com.inkubator.adryan.learnarabic.model.Soal;
 import com.inkubator.adryan.learnarabic.response.ResponseKategori;
+import com.inkubator.adryan.learnarabic.response.ResponseLogin;
 import com.inkubator.adryan.learnarabic.response.ResponseMateri;
 import com.inkubator.adryan.learnarabic.response.ResponseMateriDetail;
 import com.inkubator.adryan.learnarabic.response.ResponseSoal;
+import com.inkubator.adryan.learnarabic.response.ResponseSubMateri;
 import com.inkubator.adryan.learnarabic.response.ResponseUjian;
 
 import java.util.HashMap;
@@ -37,6 +39,9 @@ public interface ApiInterface {
     @GET("kategori")
     Call<ResponseKategori> getKategori();
 
+    @GET("sub-materi")
+    Call<ResponseSubMateri> getSubMateri();
+
     @FormUrlEncoded
     @POST("register/register-user")
     Call<ResponseBody> registerRequest(
@@ -48,6 +53,6 @@ public interface ApiInterface {
 
     @FormUrlEncoded
     @POST("login/login")
-    Call<ResponseBody> loginRequest(@Field("username") String username,
-                                    @Field("password") String password);
+    Call<ResponseLogin> loginRequest(@Field("username") String username,
+                                     @Field("password") String password);
 }

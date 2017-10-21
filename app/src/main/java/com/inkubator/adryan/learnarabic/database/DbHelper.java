@@ -11,6 +11,7 @@ import com.inkubator.adryan.learnarabic.model.Kategori;
 import com.inkubator.adryan.learnarabic.model.Materi;
 import com.inkubator.adryan.learnarabic.model.MateriDetail;
 import com.inkubator.adryan.learnarabic.model.Soal;
+import com.inkubator.adryan.learnarabic.model.SubMateri;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -27,7 +28,7 @@ public class DbHelper extends SQLiteOpenHelper {
     private static final String LOG = "DbHelper";
 
     //versi database
-    private static final Integer DATABASE_VERSION = 2;
+    private static final Integer DATABASE_VERSION = 3;
 
     //nama database
     private static final String DATABASE_NAME = "app-learning";
@@ -37,11 +38,13 @@ public class DbHelper extends SQLiteOpenHelper {
     private static final String TABLE_MATERI = "materi";
     private static final String TABLE_MATERI_DETAIL = "materi_detail";
     private static final String TABLE_SOAL = "soal";
+    private static final String TABLE_SUB_MATERI = "sub_materi";
 
     //common field name
     private static final String KEY_TIMESTAMP = "timestamp";
     private static final String KEY_IDKATEGORI = "idKategori";
     private static final String KEY_IDMATERI = "idMateri";
+    private static final String KEY_IDSUBMATERI = "idSubMateri";
     private static final String KEY_GAMBAR = "gambar";
 
     //field tabel kategori
@@ -49,6 +52,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
     //field tabel materi
     private static final String KEY_NAMAMATERI = "namaMateri";
+
 
     //field tabel materi_detail
     private static final String KEY_IDMATERI_DETAIL = "idMateriDetail";
@@ -75,24 +79,34 @@ public class DbHelper extends SQLiteOpenHelper {
     private static final String CREATE_TABLE_MATERI = "CREATE TABLE  "+TABLE_MATERI+" ( "+
             KEY_IDMATERI+" INTEGER PRIMARY KEY," +
             KEY_NAMAMATERI+" TEXT, "+
-            KEY_IDKATEGORI+" INTEGER,"+
             KEY_TIMESTAMP+" DATETIME)";
+
+    //tabel sub-materi
+    private static final String CREATE_TABLE_SUB_MATERI = "CREATE TABLE "+TABLE_SUB_MATERI+" ("+
+            KEY_IDSUBMATERI+" INTEGER PRIMARY KEY,"+
+            KEY_IDMATERI+" INTEGER,"+
+            KEY_IDKATEGORI+" INTEGER,"+
+            KEY_TIMESTAMP+" DATETIME,"+
+            "FOREIGN KEY ("+KEY_IDMATERI+")"+
+            "REFERENCES "+TABLE_MATERI+"("+KEY_IDMATERI+")"+
+            "ON UPDATE CASCADE "+
+            "ON DELETE CASCADE,"+
+            "FOREIGN KEY ("+KEY_IDKATEGORI+")"+
+            "REFERENCES "+TABLE_KATEGORI+"("+KEY_IDKATEGORI+")"+
+            "ON UPDATE CASCADE "+
+            "ON DELETE CASCADE"+
+            ")";
 
     //tabel materi-detail
     private static final String CREATE_TABLE_MATERI_DETAIL = "CREATE TABLE  "+TABLE_MATERI_DETAIL+" ( " +
             KEY_IDMATERI_DETAIL+" INTEGER PRIMARY KEY," +
-            KEY_IDKATEGORI+" INTEGER,"+
-            KEY_IDMATERI+" INTEGER,"+
+            KEY_IDSUBMATERI+" INTEGER,"+
             KEY_ISI+" TEXT, "+
             KEY_GAMBAR+" TEXT,"+
             KEY_TERJEMAHAN+" TEXT,"+
             KEY_TIMESTAMP+" DATETIME,"+
-            "FOREIGN KEY ("+KEY_IDKATEGORI+")"+
-            "REFERENCES "+TABLE_KATEGORI+"("+KEY_IDKATEGORI+")"+
-            "ON UPDATE CASCADE "+
-            "ON DELETE CASCADE,"+
-            "FOREIGN KEY ("+KEY_IDMATERI+")"+
-            "REFERENCES "+TABLE_MATERI+"("+KEY_IDMATERI+")"+
+            "FOREIGN KEY ("+KEY_IDSUBMATERI+")"+
+            "REFERENCES "+TABLE_SUB_MATERI+"("+KEY_IDSUBMATERI+")"+
             "ON UPDATE CASCADE "+
             "ON DELETE CASCADE"+
             ")";
@@ -121,10 +135,13 @@ public class DbHelper extends SQLiteOpenHelper {
         Log.d(LOG,"Create table "+TABLE_KATEGORI);
         db.execSQL(CREATE_TABLE_MATERI);
         Log.d(LOG,"Create table "+TABLE_MATERI);
+        db.execSQL(CREATE_TABLE_SUB_MATERI);
+        Log.d(LOG, "Create table "+TABLE_SUB_MATERI);
         db.execSQL(CREATE_TABLE_MATERI_DETAIL);
         Log.d(LOG,"Create table "+TABLE_MATERI_DETAIL);
         db.execSQL(CREATE_TABLE_SOAL);
         Log.d(LOG,"Create table "+TABLE_SOAL);
+
     }
 
     @Override
@@ -133,8 +150,10 @@ public class DbHelper extends SQLiteOpenHelper {
         //drop older tables
         db.execSQL("DROP TABLE IF EXISTS "+TABLE_KATEGORI);
         db.execSQL("DROP TABLE IF EXISTS "+TABLE_MATERI);
+        db.execSQL("DROP TABLE IF EXISTS "+TABLE_SUB_MATERI);
         db.execSQL("DROP TABLE IF EXISTS "+TABLE_MATERI_DETAIL);
         db.execSQL("DROP TABLE IF EXISTS "+TABLE_SOAL);
+
 
         //create new database
         onCreate(db);
@@ -258,7 +277,6 @@ public class DbHelper extends SQLiteOpenHelper {
         ContentValues cv = new ContentValues();
         cv.put(KEY_IDMATERI, materi.getIdMateri());
         cv.put(KEY_NAMAMATERI,materi.getNamaMateri());
-        cv.put(KEY_IDKATEGORI,materi.getIdKategori());
         cv.put(KEY_TIMESTAMP,materi.getTimestamp());
 
         Long idkat= db.insert(TABLE_MATERI,null,cv);
@@ -335,8 +353,7 @@ public class DbHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
         cv.put(KEY_IDMATERI_DETAIL,materiDetail.getIdMateriDetail());
-        cv.put(KEY_IDKATEGORI,materiDetail.getIdKategori());
-        cv.put(KEY_IDMATERI,materiDetail.getIdMateri());
+        cv.put(KEY_IDSUBMATERI,materiDetail.getIdSubMateri());
         cv.put(KEY_ISI,materiDetail.getIsi());
         cv.put(KEY_GAMBAR,materiDetail.getGambar());
         cv.put(KEY_TERJEMAHAN,materiDetail.getTerjemahan());
@@ -359,8 +376,7 @@ public class DbHelper extends SQLiteOpenHelper {
             do{
                 MateriDetail materiDetail = new MateriDetail();
                 materiDetail.setIdMateriDetail(c.getInt(c.getColumnIndex(KEY_IDMATERI_DETAIL)));
-                materiDetail.setIdKategori(c.getInt(c.getColumnIndex(KEY_IDKATEGORI)));
-                materiDetail.setIdMateri(c.getInt(c.getColumnIndex(KEY_IDMATERI)));
+                materiDetail.setIdSubMateri(c.getInt(c.getColumnIndex(KEY_IDSUBMATERI)));
                 materiDetail.setGambar(c.getString(c.getColumnIndex(KEY_GAMBAR)));
                 materiDetail.setIsi(c.getString(c.getColumnIndex(KEY_ISI)));
                 materiDetail.setTerjemahan(c.getString(c.getColumnIndex(KEY_TERJEMAHAN)));
@@ -378,8 +394,7 @@ public class DbHelper extends SQLiteOpenHelper {
         ContentValues cv = new ContentValues();
 
         cv.put(KEY_IDMATERI_DETAIL,materiDetail.getIdMateriDetail());
-        cv.put(KEY_IDKATEGORI,materiDetail.getIdKategori());
-        cv.put(KEY_IDMATERI,materiDetail.getIdMateri());
+        cv.put(KEY_IDSUBMATERI,materiDetail.getIdSubMateri());
         cv.put(KEY_GAMBAR,materiDetail.getGambar());
         cv.put(KEY_ISI,materiDetail.getIsi());
         cv.put(KEY_TERJEMAHAN,materiDetail.getTerjemahan());
@@ -481,6 +496,23 @@ public class DbHelper extends SQLiteOpenHelper {
 
         return db.update(TABLE_SOAL,cv,KEY_IDSOAL+" =?", new String[]{String.valueOf(soal.getIdSoal())});
     }
+
+    //----------------------------------- TABEL SUB MATERI ---------------------------------------//
+
+    public Long createSubMateri(SubMateri subMateri){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+        cv.put(KEY_IDSUBMATERI,subMateri.getIdSubMateri());
+        cv.put(KEY_IDMATERI,subMateri.getIdMateri());
+        cv.put(KEY_IDKATEGORI,subMateri.getIdKategori());
+        cv.put(KEY_TIMESTAMP,subMateri.getTimestamp());
+        Long idSubMateri = db.insert(TABLE_SUB_MATERI,null,cv);
+
+        return idSubMateri;
+
+    }
+
+
     //------------------------------- END OF TABLE METHOD ----------------------------------------//
 
     // closing database
