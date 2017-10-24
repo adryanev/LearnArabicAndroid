@@ -31,6 +31,7 @@ public class MainActivity extends AppCompatActivity
 
     SessionManager sessionManager;
     Fragment fragment;
+    Toolbar toolbar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,7 +44,7 @@ public class MainActivity extends AppCompatActivity
         transaction.replace(R.id.fragment_container, new FragmentDefault());
         transaction.commit();
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
 
@@ -108,10 +109,13 @@ public class MainActivity extends AppCompatActivity
 
         if (id == R.id.nav_home) {
             fragment = new FragmentDefault();
+            toolbar.setTitle("Learn Arabic");
         } else if (id == R.id.nav_materi) {
             fragment = new MateriFragment();
+            toolbar.setTitle("Materi");
         } else if (id == R.id.nav_ujian) {
             fragment = new FragmentUjian();
+            toolbar.setTitle("Ujian");
         }
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.setCustomAnimations(android.R.anim.slide_out_right,android.R.anim.slide_in_left);

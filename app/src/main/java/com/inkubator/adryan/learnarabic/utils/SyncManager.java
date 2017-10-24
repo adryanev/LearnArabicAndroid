@@ -4,11 +4,22 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
+import android.media.MediaScannerConnection;
+import android.os.AsyncTask;
+import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.annotation.GlideModule;
+import com.bumptech.glide.module.AppGlideModule;
+
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.transition.Transition;
+import com.inkubator.adryan.learnarabic.config.ServerConfig;
 import com.inkubator.adryan.learnarabic.database.DbHelper;
 import com.inkubator.adryan.learnarabic.model.Kategori;
 import com.inkubator.adryan.learnarabic.model.Materi;
@@ -28,6 +39,10 @@ import com.squareup.picasso.Target;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -73,10 +88,10 @@ public class SyncManager extends ContextWrapper {
                 if(response.isSuccessful()){
                     List<SubMateri> subMateri = response.body().getSubMateri();
                     Log.d(TAG,"Succes receiving: "+subMateri.size());
-                    db.truncateTable("materi_detail");
+                    db.truncateTable("sub_materi");
                     for (SubMateri subMateri1: subMateri) {
                         db.createSubMateri(subMateri1);
-                        Log.d(TAG,"Insert Materi detail "+subMateri1.getIdSubMateri().toString());
+                        Log.d(TAG,"Insert Sub materi "+subMateri1.getIdSubMateri().toString());
 
                     }
                     pb.dismiss();
@@ -114,6 +129,7 @@ public class SyncManager extends ContextWrapper {
                         Log.d(TAG,"Insert Materi detail "+materidetail.getIdMateriDetail().toString());
 
                     }
+
                     pb.dismiss();
                 }
                 else{
@@ -277,4 +293,6 @@ public class SyncManager extends ContextWrapper {
             }
         };
     }
+
+
 }

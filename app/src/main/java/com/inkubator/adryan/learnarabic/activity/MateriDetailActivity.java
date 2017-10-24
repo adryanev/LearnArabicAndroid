@@ -12,11 +12,14 @@ import android.widget.Toast;
 
 import com.inkubator.adryan.learnarabic.R;
 import com.inkubator.adryan.learnarabic.adapter.MateriDetailAdapter;
+import com.inkubator.adryan.learnarabic.database.DbHelper;
+import com.inkubator.adryan.learnarabic.model.Materi;
 import com.inkubator.adryan.learnarabic.model.MateriDetail;
 import com.inkubator.adryan.learnarabic.rest.ApiClient;
 import com.inkubator.adryan.learnarabic.rest.ApiInterface;
 import com.inkubator.adryan.learnarabic.response.ResponseMateriDetail;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -31,21 +34,35 @@ import retrofit2.Response;
 public class MateriDetailActivity extends AppCompatActivity {
 
     private  static final String TAG = MainActivity.class.getSimpleName();
-
+    DbHelper dbHelper;
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_materi_detail_recycle_view);
+        dbHelper = new DbHelper(getApplicationContext());
 
-        getSoal();
+        getSoalFromDB();
+        //getSoal();
     }
 
+    private void getSoalFromDB() {
+        Intent i = getIntent();
+        Integer idSubMateri = i.getIntExtra("idSubMateri",0);
+        List<MateriDetail> md = dbHelper.getMateriDetailBySubMateri(idSubMateri);
+        final RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycle_materi_detail);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+        recyclerView.setAdapter(new MateriDetailAdapter(md,getApplicationContext()));
+
+
+    }
+
+    /*
     private void getSoal() {
         Intent intent = getIntent();
-        Integer idMateri = intent.getIntExtra("idMateri",0);
+        Integer idMateri = intent.getIntExtra("idSubMateri",0);
         HashMap<String, Integer> params = new HashMap<>();
         params.put("idMateri",idMateri);
-       final RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycle_materi_detail);
+        final RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycle_materi_detail);
         recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
         ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
 
@@ -74,4 +91,5 @@ public class MateriDetailActivity extends AppCompatActivity {
             }
         });
     }
+    */
 }

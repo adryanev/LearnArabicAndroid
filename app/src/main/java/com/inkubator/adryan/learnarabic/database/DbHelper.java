@@ -302,7 +302,6 @@ public class DbHelper extends SQLiteOpenHelper {
 
         materi.setIdMateri(c.getInt(c.getColumnIndex(KEY_IDMATERI)));
         materi.setNamaMateri(c.getString(c.getColumnIndex(KEY_NAMAKATEGORI)));
-        materi.setIdKategori(c.getString(c.getColumnIndex(KEY_IDKATEGORI)));
         materi.setTimestamp(c.getString(c.getColumnIndex(KEY_TIMESTAMP)));
 
         return materi;
@@ -324,8 +323,7 @@ public class DbHelper extends SQLiteOpenHelper {
             do{
                 Materi materi = new Materi();
                 materi.setIdMateri(c.getInt(c.getColumnIndex(KEY_IDMATERI)));
-                materi.setNamaMateri(c.getString(c.getColumnIndex(KEY_NAMAKATEGORI)));
-                materi.setIdKategori(c.getString(c.getColumnIndex(KEY_IDKATEGORI)));
+                materi.setNamaMateri(c.getString(c.getColumnIndex(KEY_NAMAMATERI)));
                 materi.setTimestamp(c.getString(c.getColumnIndex(KEY_TIMESTAMP)));
 
                 materiList.add(materi);
@@ -339,7 +337,6 @@ public class DbHelper extends SQLiteOpenHelper {
         ContentValues cv = new ContentValues();
         cv.put(KEY_IDMATERI,materi.getIdMateri());
         cv.put(KEY_NAMAMATERI,materi.getNamaMateri());
-        cv.put(KEY_IDKATEGORI,materi.getIdKategori());
         cv.put(KEY_TIMESTAMP,materi.getTimestamp());
 
         return db.update(TABLE_MATERI,cv,KEY_IDMATERI+" =?",new String[]{ String.valueOf(materi.getIdMateri())
@@ -369,6 +366,29 @@ public class DbHelper extends SQLiteOpenHelper {
         List<MateriDetail> allMateriDetail = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
         String sqlQuery = "SELECT * FROM "+TABLE_MATERI_DETAIL+" WHERE "+KEY_IDKATEGORI+" = "+idKategori+" AND "+KEY_IDMATERI+" = "+idMateri;
+        Log.e(LOG,sqlQuery);
+        Cursor c = db.rawQuery(sqlQuery,null);
+
+        if(c.moveToFirst()){
+            do{
+                MateriDetail materiDetail = new MateriDetail();
+                materiDetail.setIdMateriDetail(c.getInt(c.getColumnIndex(KEY_IDMATERI_DETAIL)));
+                materiDetail.setIdSubMateri(c.getInt(c.getColumnIndex(KEY_IDSUBMATERI)));
+                materiDetail.setGambar(c.getString(c.getColumnIndex(KEY_GAMBAR)));
+                materiDetail.setIsi(c.getString(c.getColumnIndex(KEY_ISI)));
+                materiDetail.setTerjemahan(c.getString(c.getColumnIndex(KEY_TERJEMAHAN)));
+                materiDetail.setTimestamp(c.getString(c.getColumnIndex(KEY_TIMESTAMP)));
+
+                allMateriDetail.add(materiDetail);
+            }while(c.moveToNext());
+        }
+
+        return allMateriDetail;
+    }
+    public List<MateriDetail> getMateriDetailBySubMateri(Integer idSubMateri){
+        List<MateriDetail> allMateriDetail = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        String sqlQuery = "SELECT * FROM "+TABLE_MATERI_DETAIL+" WHERE "+KEY_IDSUBMATERI+" = "+idSubMateri;
         Log.e(LOG,sqlQuery);
         Cursor c = db.rawQuery(sqlQuery,null);
 
@@ -510,6 +530,21 @@ public class DbHelper extends SQLiteOpenHelper {
 
         return idSubMateri;
 
+    }
+
+    public Integer getSubMateriByMateriKategori(Integer idMateri, Integer idKategori){
+        Integer idSubMateri = 0;
+        SQLiteDatabase db = getReadableDatabase();
+        String sqlQuery = "SELECT "+KEY_IDSUBMATERI+" from "+TABLE_SUB_MATERI +" WHERE "+KEY_IDMATERI+" = "+idMateri+
+                " AND "+KEY_IDKATEGORI+" = "+idKategori;
+        Cursor c = db.rawQuery(sqlQuery,null);
+        if(c.moveToFirst()){
+            do{
+                idSubMateri = c.getInt(c.getColumnIndex(KEY_IDSUBMATERI));
+            }while (c.moveToNext());
+        }
+
+        return idSubMateri;
     }
 
 

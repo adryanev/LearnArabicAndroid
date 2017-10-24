@@ -5,6 +5,7 @@ package com.inkubator.adryan.learnarabic.model;
  */
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.thoughtbot.expandablerecyclerview.models.ExpandableGroup;
 
 public class Materi {
 

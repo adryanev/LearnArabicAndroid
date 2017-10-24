@@ -2,6 +2,7 @@ package com.inkubator.adryan.learnarabic.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -55,8 +56,12 @@ public class MateriDetailAdapter extends RecyclerView.Adapter<MateriDetailAdapte
     public void onBindViewHolder(MateriDetailViewHolder holder, int position) {
         MateriDetail materiDetail = materiDetailsList.get(position);
         Picasso.with(context).load(ServerConfig.IMAGE_FOLDER+materiDetail.getGambar()).resize(300,300).centerCrop().into(holder.gambar);
-        holder.arab.setText(materiDetail.getIsi());
-        holder.terjemahan.setText(materiDetail.getTerjemahan());
+        holder.arab.setText(Html.fromHtml(materiDetail.getIsi()));
+
+        if(materiDetail.getTerjemahan()!= null && !materiDetail.getTerjemahan().isEmpty()){
+            holder.terjemahan.setText(Html.fromHtml(materiDetail.getTerjemahan()));
+        }
+
     }
 
     @Override

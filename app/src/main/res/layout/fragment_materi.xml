@@ -9,8 +9,14 @@
     tools:context="com.inkubator.adryan.learnarabic.activity.MainActivity">
 
 
-            <android.support.v7.widget.RecyclerView
-                android:paddingTop="?attr/actionBarSize"
+    
+    <ExpandableListView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/lvexp">
+
+    </ExpandableListView>
+           <!-- <android.support.v7.widget.RecyclerView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:id="@+id/recycle"
@@ -19,6 +25,5 @@
 
             </android.support.v7.widget.RecyclerView>
 
-
-
+-->
 </LinearLayout>

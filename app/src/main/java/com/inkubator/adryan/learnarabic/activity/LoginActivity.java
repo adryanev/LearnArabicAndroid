@@ -125,7 +125,7 @@ public class LoginActivity extends AppCompatActivity{
 
 
                     }else{
-                        Toast.makeText(context,"Gagal Registrasi User",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context,"Gagal Login User",Toast.LENGTH_SHORT).show();
                     }
                 }
                 else{
@@ -139,6 +139,7 @@ public class LoginActivity extends AppCompatActivity{
             public void onFailure(Call<ResponseLogin> call, Throwable t) {
                 Log.e("debug", "onFailure: ERROR > " + t.getMessage());
                 Toast.makeText(context, "Koneksi Internet Bermasalah", Toast.LENGTH_SHORT).show();
+                loading.dismiss();
             }
         });
     }

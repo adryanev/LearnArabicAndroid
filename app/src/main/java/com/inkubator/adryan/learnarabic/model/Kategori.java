@@ -1,5 +1,8 @@
 package com.inkubator.adryan.learnarabic.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -18,6 +21,7 @@ public class Kategori {
     @SerializedName("timestamp")
     @Expose
     private String timestamp;
+
 
     public Integer getIdKategori() {
         return idKategori;
@@ -42,5 +46,6 @@ public class Kategori {
     public void setTimestamp(String timestamp) {
         this.timestamp = timestamp;
     }
+
 
 }
