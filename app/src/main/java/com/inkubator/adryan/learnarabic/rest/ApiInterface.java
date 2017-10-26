@@ -55,4 +55,9 @@ public interface ApiInterface {
     @POST("login/login")
     Call<ResponseLogin> loginRequest(@Field("username") String username,
                                      @Field("password") String password);
+
+    @FormUrlEncoded
+    @POST("ujian/add")
+    Call<ResponseBody> addUjian(@Field("idUser") String idUser,
+                                 @Field("totalSkor") Integer totalSkor);
 }

@@ -32,6 +32,7 @@ public class MainActivity extends AppCompatActivity
     SessionManager sessionManager;
     Fragment fragment;
     Toolbar toolbar;
+    SyncManager syncManager;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,6 +41,7 @@ public class MainActivity extends AppCompatActivity
         sessionManager = new SessionManager(getApplicationContext());
         sessionManager.checkLogin();
 
+        syncManager = new SyncManager(MainActivity.this);
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.fragment_container, new FragmentDefault());
         transaction.commit();
@@ -56,6 +58,11 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        if(checkConnectivity() == true){
+
+            syncManager.syncUjian();
+        }
     }
 
     @Override
@@ -95,7 +102,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void syncDatabase() {
-        SyncManager syncManager = new SyncManager(MainActivity.this);
+
         syncManager.syncAll();
     }
 
@@ -132,7 +139,8 @@ public class MainActivity extends AppCompatActivity
         ConnectivityManager connectivityManager = (ConnectivityManager) this.getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
 
-        return (networkInfo !=null && networkInfo.isConnected());
+       if(networkInfo !=null && networkInfo.isConnected()) return true;
+       else return false;
 
     }
 }

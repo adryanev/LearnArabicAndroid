@@ -57,7 +57,10 @@ public class MateriDetailAdapter extends RecyclerView.Adapter<MateriDetailAdapte
         MateriDetail materiDetail = materiDetailsList.get(position);
         Picasso.with(context).load(ServerConfig.IMAGE_FOLDER+materiDetail.getGambar()).resize(300,300).centerCrop().into(holder.gambar);
         holder.arab.setText(Html.fromHtml(materiDetail.getIsi()));
-
+        switch (materiDetail.getIdSubMateri()){
+            case 1:case 3:
+            holder.arab.setTextDirection(View.TEXT_DIRECTION_ANY_RTL);
+        }
         if(materiDetail.getTerjemahan()!= null && !materiDetail.getTerjemahan().isEmpty()){
             holder.terjemahan.setText(Html.fromHtml(materiDetail.getTerjemahan()));
         }

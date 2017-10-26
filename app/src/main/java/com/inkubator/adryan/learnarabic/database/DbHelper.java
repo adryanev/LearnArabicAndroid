@@ -12,6 +12,7 @@ import com.inkubator.adryan.learnarabic.model.Materi;
 import com.inkubator.adryan.learnarabic.model.MateriDetail;
 import com.inkubator.adryan.learnarabic.model.Soal;
 import com.inkubator.adryan.learnarabic.model.SubMateri;
+import com.inkubator.adryan.learnarabic.model.Ujian;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -39,6 +40,7 @@ public class DbHelper extends SQLiteOpenHelper {
     private static final String TABLE_MATERI_DETAIL = "materi_detail";
     private static final String TABLE_SOAL = "soal";
     private static final String TABLE_SUB_MATERI = "sub_materi";
+    private static final String TABLE_UJIAN = "ujian";
 
     //common field name
     private static final String KEY_TIMESTAMP = "timestamp";
@@ -67,6 +69,12 @@ public class DbHelper extends SQLiteOpenHelper {
     private static final String KEY_C = "c";
     private static final String KEY_D = "d";
     private static final String KEY_JAWABAN = "jawaban";
+
+    //field tabel ujian
+    private static final String KEY_ID_UJIAN = "idUjian";
+    private static final String KEY_ID_USER = "idUser";
+    private static final String KEY_TOTAL_SKOR = "totalSkor";
+    private static final String KEY_SYNC = "sync";
 
     //Create table Statement
     //tabel kategori
@@ -123,6 +131,14 @@ public class DbHelper extends SQLiteOpenHelper {
             KEY_JAWABAN+" TEXT, "+
             KEY_TIMESTAMP+" DATETIME)";
 
+    //tabel ujian
+    private static final String CREATE_TABLE_UJIAN = "CREATE TABLE "+TABLE_UJIAN+" ( "+
+            KEY_ID_UJIAN+" INTEGER PRIMARY KEY AUTOINCREMENT,"+
+            KEY_ID_USER+" INTEGER,"+
+            KEY_TOTAL_SKOR+" INTEGER,"+
+            KEY_SYNC+" INTEGER)";
+
+
 
     public DbHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -141,6 +157,8 @@ public class DbHelper extends SQLiteOpenHelper {
         Log.d(LOG,"Create table "+TABLE_MATERI_DETAIL);
         db.execSQL(CREATE_TABLE_SOAL);
         Log.d(LOG,"Create table "+TABLE_SOAL);
+        db.execSQL(CREATE_TABLE_UJIAN);
+        Log.d(LOG,"Create table "+TABLE_UJIAN);
 
     }
 
@@ -153,6 +171,7 @@ public class DbHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS "+TABLE_SUB_MATERI);
         db.execSQL("DROP TABLE IF EXISTS "+TABLE_MATERI_DETAIL);
         db.execSQL("DROP TABLE IF EXISTS "+TABLE_SOAL);
+        db.execSQL("DROP TABLE IF EXISTS "+TABLE_UJIAN);
 
 
         //create new database
@@ -547,6 +566,44 @@ public class DbHelper extends SQLiteOpenHelper {
         return idSubMateri;
     }
 
+    //-------------------------------METHOD TABLE UJIAN-------------------------------------------//
+    public Long setUjian(Integer idUser, Integer totalSkor, Integer sync){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+        cv.put(KEY_ID_USER, idUser);
+        cv.put(KEY_TOTAL_SKOR, totalSkor);
+        cv.put(KEY_SYNC, sync);
+        Long idUjian = db.insert(TABLE_UJIAN,null,cv);
+
+        return idUjian;
+    }
+
+    public List<Ujian> getNotSyncListUjian(){
+        List<Ujian> ujianList = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "SELECT * FROM "+TABLE_UJIAN+" WHERE "+KEY_SYNC+" = 0";
+
+        Cursor c = db.rawQuery(query,null);
+
+        if (c.moveToFirst()){
+            Ujian ujian = new Ujian();
+            ujian.setIdUjian(c.getInt(c.getColumnIndex(KEY_ID_USER)));
+            ujian.setIdUser(c.getInt(c.getColumnIndex(KEY_ID_USER)));
+            ujian.setTotalSkor(c.getInt(c.getColumnIndex(KEY_TOTAL_SKOR)));
+            ujian.setSync(c.getInt(c.getColumnIndex(KEY_SYNC)));
+
+            ujianList.add(ujian);
+        }
+        return ujianList;
+    }
+
+    public boolean updateSyncUjian(Integer idUjian){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+        cv.put(KEY_SYNC,1);
+        db.update(TABLE_UJIAN,cv,KEY_ID_UJIAN+" = "+idUjian,null);
+        return true;
+    }
 
     //------------------------------- END OF TABLE METHOD ----------------------------------------//
 

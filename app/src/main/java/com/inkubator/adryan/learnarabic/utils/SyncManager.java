@@ -3,6 +3,7 @@ package com.inkubator.adryan.learnarabic.utils;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.ContextWrapper;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
@@ -19,6 +20,7 @@ import com.bumptech.glide.module.AppGlideModule;
 
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
+import com.inkubator.adryan.learnarabic.activity.HasilActivity;
 import com.inkubator.adryan.learnarabic.config.ServerConfig;
 import com.inkubator.adryan.learnarabic.database.DbHelper;
 import com.inkubator.adryan.learnarabic.model.Kategori;
@@ -26,6 +28,7 @@ import com.inkubator.adryan.learnarabic.model.Materi;
 import com.inkubator.adryan.learnarabic.model.MateriDetail;
 import com.inkubator.adryan.learnarabic.model.Soal;
 import com.inkubator.adryan.learnarabic.model.SubMateri;
+import com.inkubator.adryan.learnarabic.model.Ujian;
 import com.inkubator.adryan.learnarabic.response.ResponseKategori;
 import com.inkubator.adryan.learnarabic.response.ResponseMateri;
 import com.inkubator.adryan.learnarabic.response.ResponseMateriDetail;
@@ -45,6 +48,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -63,6 +67,28 @@ public class SyncManager extends ContextWrapper {
     public SyncManager(Context context){
         super(context);
         this.db = new DbHelper(this);
+    }
+
+    public void syncUjian(){
+        List<Ujian> listIdUjian = db.getNotSyncListUjian();
+        for(final Ujian u: listIdUjian){
+            ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
+            Call<ResponseBody> call = apiService.addUjian(u.getIdUser().toString(), (int) Math.ceil(u.getTotalSkor()));
+            call.enqueue(new Callback<ResponseBody>() {
+                @Override
+                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                    if (response.isSuccessful()) {
+                        Log.d(TAG, "Success Mengirimkan data ujian ke server.");
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<ResponseBody> call, Throwable t) {
+                    Log.e(TAG, "Gagal Sinkronisasi Ujian");
+                }
+
+            });
+        }
     }
     public void syncAll(){
         pb = new ProgressDialog(this);

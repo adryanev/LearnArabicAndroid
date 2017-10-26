@@ -114,7 +114,7 @@ public class LoginActivity extends AppCompatActivity{
                     String success = response.body().getStatus();
                     List<User> user = response.body().getData();
                     if(success.equals("success")){
-                        session.createLoginSession(user.get(0).getUsername(),user.get(0).getPassword(),
+                        session.createLoginSession(user.get(0).getIdUser().toString(),user.get(0).getUsername(),user.get(0).getPassword(),
                                 user.get(0).getNama(),user.get(0).getEmail(),user.get(0).getTanggalLahir());
 
                         Toast.makeText(context,"Sukses Login "+ user.get(0).getNama(),Toast.LENGTH_SHORT).show();

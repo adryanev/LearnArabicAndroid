@@ -27,12 +27,15 @@ import android.widget.TextView;
 import com.inkubator.adryan.learnarabic.R;
 import com.inkubator.adryan.learnarabic.adapter.MateriDetailAdapter;
 import com.inkubator.adryan.learnarabic.config.ServerConfig;
+import com.inkubator.adryan.learnarabic.database.DbHelper;
 import com.inkubator.adryan.learnarabic.model.MateriDetail;
 import com.inkubator.adryan.learnarabic.model.Soal;
 import com.inkubator.adryan.learnarabic.response.ResponseMateriDetail;
 import com.inkubator.adryan.learnarabic.response.ResponseSoal;
+import com.inkubator.adryan.learnarabic.response.ResponseUjian;
 import com.inkubator.adryan.learnarabic.rest.ApiClient;
 import com.inkubator.adryan.learnarabic.rest.ApiInterface;
+import com.inkubator.adryan.learnarabic.utils.SessionManager;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
@@ -41,9 +44,11 @@ import org.w3c.dom.Text;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -53,7 +58,7 @@ import retrofit2.Response;
  */
 
 public class UjianActivity extends AppCompatActivity implements View.OnClickListener {
-
+    SessionManager sm;
     Context context;
     TextView timer, textSoal, noSoal;
     Button a,b,c,d;
@@ -66,12 +71,15 @@ public class UjianActivity extends AppCompatActivity implements View.OnClickList
     static int currentQue;
     List<Soal> listSoalUjian;
     ImageView gambarSoal;
-
+    DbHelper db;
+    private static final Integer SYNCHED_FALSE = 0;
+    private static final Integer SYNCHED_TRUE = 1;
     private  static final String TAG = UjianActivity.class.getSimpleName();
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ujian);
+        db = new DbHelper(getApplicationContext());
         initView();
         initSoal();
         initTimer();
@@ -155,9 +163,31 @@ public class UjianActivity extends AppCompatActivity implements View.OnClickList
     }
 
     private void sendResult() {
-        Intent i = new Intent(getApplicationContext(),HasilActivity.class);
-        i.putExtra("score",score>100? 100: score);
-        startActivity(i);
+        sm = new SessionManager(context);
+        final HashMap<String,String> user = sm.getUserDetail();
+        ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
+        Call<ResponseBody> call = apiService.addUjian(user.get("idUser"), (int) Math.ceil(score));
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if(response.isSuccessful()){
+                    Log.d(TAG,"Success Mengirimkan data ujian ke server.");
+                    Intent i = new Intent(getApplicationContext(),HasilActivity.class);
+                    i.putExtra("score",score>100? 100: score);
+                    i.putExtra("idUser",user.get("idUser"));
+                    startActivity(i);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Log.e(TAG,"Gagal mengirimkan data ujian ke server");
+                Log.d(TAG,"Memasukkan data ujian ke data tunggu");
+                db.setUjian(Integer.parseInt(user.get("idUser")),(int) Math.ceil(score),SYNCHED_FALSE);
+                Log.d(TAG,"Memasukkan ujian ke local database");
+            }
+        });
+
     }
 
     private void blinkText() {
