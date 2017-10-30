@@ -4,15 +4,18 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.text.BidiFormatter;
+import android.text.Html;
 import android.text.TextDirectionHeuristic;
 import android.text.TextDirectionHeuristics;
 import android.util.Log;
@@ -58,6 +61,7 @@ import retrofit2.Response;
  */
 
 public class UjianActivity extends AppCompatActivity implements View.OnClickListener {
+    SharedPreferences s;
     SessionManager sm;
     Context context;
     TextView timer, textSoal, noSoal;
@@ -67,7 +71,7 @@ public class UjianActivity extends AppCompatActivity implements View.OnClickList
     Animation animation;
     ProgressDialog pd;
     Soal soalSekarang;
-    static Double score;
+    static Integer score;
     static int currentQue;
     List<Soal> listSoalUjian;
     ImageView gambarSoal;
@@ -82,8 +86,17 @@ public class UjianActivity extends AppCompatActivity implements View.OnClickList
         db = new DbHelper(getApplicationContext());
         initView();
         initSoal();
+        //initSoalFromDB();
         initTimer();
         blinkText();
+        getSupportActionBar().setTitle("Ujian");
+
+    }
+
+    private void initSoalFromDB() {
+        listSoalUjian = db.getSoalByLimit((long) 5);
+        pd.dismiss();
+        getNextQuestion();
 
 
     }
@@ -121,7 +134,7 @@ public class UjianActivity extends AppCompatActivity implements View.OnClickList
             noSoal.setText(currentQue+"/"+listSoalUjian.size());
             soalSekarang = listSoalUjian.get(currentQue-1);
 
-            textSoal.setText(soalSekarang.getSoal());
+            textSoal.setText(Html.fromHtml(soalSekarang.getSoal()));
             Picasso.with(getApplicationContext()).load(ServerConfig.IMAGE_FOLDER+soalSekarang.getGambar()).resize(300,300).into(gambarSoal);
 
             a.setText("A. "+soalSekarang.getA());
@@ -163,19 +176,18 @@ public class UjianActivity extends AppCompatActivity implements View.OnClickList
     }
 
     private void sendResult() {
-        sm = new SessionManager(context);
+        sm = new SessionManager(getApplicationContext());
         final HashMap<String,String> user = sm.getUserDetail();
         ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
-        Call<ResponseBody> call = apiService.addUjian(user.get("idUser"), (int) Math.ceil(score));
+        Log.d(TAG,"idUser = "+user.get("idUser")+" Score: "+score);
+        Call<ResponseBody> call = apiService.addUjian(user.get("idUser"), score.toString());
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if(response.isSuccessful()){
+                    Log.d(TAG,response.message());
                     Log.d(TAG,"Success Mengirimkan data ujian ke server.");
-                    Intent i = new Intent(getApplicationContext(),HasilActivity.class);
-                    i.putExtra("score",score>100? 100: score);
-                    i.putExtra("idUser",user.get("idUser"));
-                    startActivity(i);
+
                 }
             }
 
@@ -187,6 +199,11 @@ public class UjianActivity extends AppCompatActivity implements View.OnClickList
                 Log.d(TAG,"Memasukkan ujian ke local database");
             }
         });
+        Intent i = new Intent(getApplicationContext(),HasilActivity.class);
+        i.putExtra("score",score);
+        i.putExtra("idUser",user.get("idUser"));
+        startActivity(i);
+        finish();
 
     }
 
@@ -202,7 +219,7 @@ public class UjianActivity extends AppCompatActivity implements View.OnClickList
         context = this.getApplicationContext();
         pd = ProgressDialog.show(this,null,"Sedang menyiapkan soal ujian",true,false);
 
-        score = 0.0;
+        score = 0;
         currentQue = 0;
         timer = (TextView) findViewById(R.id.text_timer);
         pb = (ProgressBar) findViewById(R.id.progress_bar);
@@ -270,7 +287,7 @@ public class UjianActivity extends AppCompatActivity implements View.OnClickList
         }
 
         if(ans.equalsIgnoreCase(soalSekarang.getJawaban())){
-            score += Math.ceil(100/listSoalUjian.size());
+            score +=100/listSoalUjian.size();
         }
 
         countDownTimer.cancel();

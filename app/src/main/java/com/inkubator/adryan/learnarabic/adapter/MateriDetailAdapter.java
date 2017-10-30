@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.inkubator.adryan.learnarabic.R;
 import com.inkubator.adryan.learnarabic.config.ServerConfig;
+import com.inkubator.adryan.learnarabic.database.DbHelper;
 import com.inkubator.adryan.learnarabic.model.MateriDetail;
 import com.squareup.picasso.Picasso;
 
@@ -23,6 +24,7 @@ import java.util.List;
 
 public class MateriDetailAdapter extends RecyclerView.Adapter<MateriDetailAdapter.MateriDetailViewHolder> {
 
+    private DbHelper db;
     private List<MateriDetail> materiDetailsList;
     private Context context;
 
@@ -41,7 +43,7 @@ public class MateriDetailAdapter extends RecyclerView.Adapter<MateriDetailAdapte
     }
 
     public MateriDetailAdapter(List<MateriDetail> materiDetails, Context context){
-
+        db = new DbHelper(context);
         this.materiDetailsList = materiDetails;
         this.context = context;
     }
@@ -57,9 +59,11 @@ public class MateriDetailAdapter extends RecyclerView.Adapter<MateriDetailAdapte
         MateriDetail materiDetail = materiDetailsList.get(position);
         Picasso.with(context).load(ServerConfig.IMAGE_FOLDER+materiDetail.getGambar()).resize(300,300).centerCrop().into(holder.gambar);
         holder.arab.setText(Html.fromHtml(materiDetail.getIsi()));
-        switch (materiDetail.getIdSubMateri()){
-            case 1:case 3:
-            holder.arab.setTextDirection(View.TEXT_DIRECTION_ANY_RTL);
+        holder.arab.setTextDirection(View.TEXT_DIRECTION_ANY_RTL);
+        Integer idKategori = db.getIdKategoriFromSubMateri(materiDetail.getIdSubMateri());
+        switch (idKategori){
+            case 2:
+            holder.arab.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
         }
         if(materiDetail.getTerjemahan()!= null && !materiDetail.getTerjemahan().isEmpty()){
             holder.terjemahan.setText(Html.fromHtml(materiDetail.getTerjemahan()));

@@ -47,6 +47,7 @@ public class MainActivity extends AppCompatActivity
         transaction.commit();
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitle("Learn Arabic");
         setSupportActionBar(toolbar);
 
 
@@ -61,7 +62,7 @@ public class MainActivity extends AppCompatActivity
 
         if(checkConnectivity() == true){
 
-            syncManager.syncUjian();
+           syncManager.syncUjian();
         }
     }
 

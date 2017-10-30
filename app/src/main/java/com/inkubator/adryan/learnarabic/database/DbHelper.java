@@ -29,7 +29,7 @@ public class DbHelper extends SQLiteOpenHelper {
     private static final String LOG = "DbHelper";
 
     //versi database
-    private static final Integer DATABASE_VERSION = 3;
+    private static final Integer DATABASE_VERSION = 4;
 
     //nama database
     private static final String DATABASE_NAME = "app-learning";
@@ -284,6 +284,18 @@ public class DbHelper extends SQLiteOpenHelper {
 
     }
 
+    public String getNamaKategori(Integer idKategori){
+        SQLiteDatabase db = this.getReadableDatabase();
+        String namaKategori = null;
+        String query = "SELECT "+KEY_NAMAKATEGORI+" FROM "+TABLE_KATEGORI+" WHERE "+KEY_IDKATEGORI+" = "+idKategori;
+        Cursor c = db.rawQuery(query,null);
+        if(c.moveToFirst()){
+            namaKategori = c.getString(c.getColumnIndex(KEY_NAMAKATEGORI));
+        }
+
+        return namaKategori;
+    }
+
     //--------------------------------METHOD TABEL MATERI --------------------------------------//
 
     /**
@@ -360,6 +372,18 @@ public class DbHelper extends SQLiteOpenHelper {
 
         return db.update(TABLE_MATERI,cv,KEY_IDMATERI+" =?",new String[]{ String.valueOf(materi.getIdMateri())
         });
+    }
+
+    public String getNamaMateri(Integer idMateri){
+        SQLiteDatabase db = this.getReadableDatabase();
+        String namaMateri = null;
+        String query = "SELECT "+KEY_NAMAMATERI+" FROM "+TABLE_MATERI+" WHERE "+KEY_IDMATERI+" = "+idMateri;
+        Cursor c = db.rawQuery(query,null);
+        if(c.moveToFirst()){
+            namaMateri = c.getString(c.getColumnIndex(KEY_NAMAMATERI));
+        }
+
+        return namaMateri;
     }
 
     //--------------------------------METHOD TABEL MATERI DETAIL --------------------------------------//
@@ -495,7 +519,7 @@ public class DbHelper extends SQLiteOpenHelper {
     public List<Soal> getSoalByLimit(Long limit){
         List<Soal> soals = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
-        String sqlQuery = "SELECT * FROM "+TABLE_SOAL+" WHERE "+KEY_IDSOAL+" IN (SELECT "+KEY_IDSOAL+" FROM "+TABLE_SOAL+" ORDER BY RANDOM() LIMIT "+limit+")";
+        String sqlQuery = "SELECT * FROM "+TABLE_SOAL+" ORDER BY RANDOM() LIMIT "+limit;
         Log.e(LOG,sqlQuery);
 
         Cursor c = db.rawQuery(sqlQuery,null);
@@ -564,6 +588,32 @@ public class DbHelper extends SQLiteOpenHelper {
         }
 
         return idSubMateri;
+    }
+
+    public Integer getIdKategoriFromSubMateri(int idSubMateri){
+        Integer idkategori = 0;
+        String sql = "SELECT "+KEY_IDKATEGORI+" FROM "+TABLE_SUB_MATERI+" WHERE "+KEY_IDSUBMATERI+" = "+idSubMateri;
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor c = db.rawQuery(sql,null);
+
+        if(c.moveToFirst()){
+            idkategori = c.getInt(c.getColumnIndex(KEY_IDKATEGORI));
+        }
+
+        return idkategori;
+
+    }
+    public Integer getIdMateriFromSubMateri(int idSubMateri){
+        Integer idMateri = 0;
+        String sql = "SELECT "+KEY_IDMATERI+" FROM "+TABLE_SUB_MATERI+" WHERE "+KEY_IDSUBMATERI+" = "+idSubMateri;
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor c = db.rawQuery(sql,null);
+
+        if(c.moveToFirst()){
+            idMateri = c.getInt(c.getColumnIndex(KEY_IDMATERI));
+        }
+
+        return idMateri;
     }
 
     //-------------------------------METHOD TABLE UJIAN-------------------------------------------//

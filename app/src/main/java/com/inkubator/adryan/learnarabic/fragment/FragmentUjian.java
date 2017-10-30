@@ -1,8 +1,11 @@
 package com.inkubator.adryan.learnarabic.fragment;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -11,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.inkubator.adryan.learnarabic.R;
 import com.inkubator.adryan.learnarabic.activity.UjianActivity;
@@ -32,25 +36,24 @@ public class FragmentUjian extends Fragment {
         btnUjian.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AlertDialog.Builder b = new AlertDialog.Builder(v.getContext())
-                        .setTitle("Mulai Ujian")
-                        .setPositiveButton("Ya", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                startActivity(i);
-                            }
-                        }
-                        ).setNegativeButton("Tidak", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.cancel();
-                            }
-                        }).setMessage("Semoga Sukses");
-                Intent intent = new Intent(getContext(), UjianActivity.class);
-                startActivity(intent);
+                if(checkConnectivity(getContext()) == true){
+                   startActivity(i);
+                }else{
+                    Toast.makeText(getContext(),"Silahkan Hidupkan Wifi/Mobile Data anda.",Toast.LENGTH_SHORT).show();
+                }
+
             }
         });
         return view;
+    }
+
+    public boolean checkConnectivity(Context c){
+        ConnectivityManager connectivityManager = (ConnectivityManager) c.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+
+        if(networkInfo !=null && networkInfo.isConnected()) return true;
+        else return false;
+
     }
 
 }

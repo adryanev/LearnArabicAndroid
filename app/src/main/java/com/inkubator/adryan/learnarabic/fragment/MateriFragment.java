@@ -22,6 +22,7 @@ import com.inkubator.adryan.learnarabic.database.DbHelper;
 import com.inkubator.adryan.learnarabic.model.Kategori;
 import com.inkubator.adryan.learnarabic.model.Materi;
 import com.inkubator.adryan.learnarabic.model.MateriDetail;
+import com.inkubator.adryan.learnarabic.response.ResponseKategori;
 import com.inkubator.adryan.learnarabic.response.ResponseMateri;
 import com.inkubator.adryan.learnarabic.rest.ApiClient;
 import com.inkubator.adryan.learnarabic.rest.ApiInterface;
@@ -72,7 +73,6 @@ public class MateriFragment extends Fragment{
                 String idKategori = listDataChild.get(listDataHeader.get(groupPosition)).get(childPosition).substring(0,1);
 
                 Integer idSubMateri = db.getSubMateriByMateriKategori(Integer.parseInt(idMateri),Integer.parseInt(idKategori));
-                Toast.makeText(getContext(),"idSubMateri = "+idSubMateri.toString(),Toast.LENGTH_SHORT).show();
                 Intent i = new Intent(getActivity(), MateriDetailActivity.class);
                 i.putExtra("idSubMateri",idSubMateri);
                 startActivity(i);

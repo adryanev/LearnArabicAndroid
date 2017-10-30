@@ -73,7 +73,7 @@ public class SyncManager extends ContextWrapper {
         List<Ujian> listIdUjian = db.getNotSyncListUjian();
         for(final Ujian u: listIdUjian){
             ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
-            Call<ResponseBody> call = apiService.addUjian(u.getIdUser().toString(), (int) Math.ceil(u.getTotalSkor()));
+            Call<ResponseBody> call = apiService.addUjian(u.getIdUser().toString(), u.getTotalSkor().toString());
             call.enqueue(new Callback<ResponseBody>() {
                 @Override
                 public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {

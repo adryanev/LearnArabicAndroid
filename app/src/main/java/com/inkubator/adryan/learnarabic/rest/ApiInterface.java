@@ -34,7 +34,7 @@ public interface ApiInterface {
     Call<ResponseMateriDetail> getAllMateriDetail();
     @GET("materi")
     Call<ResponseMateri> getMateri();
-    @GET("soal")
+    @GET("soal/random")
     Call<ResponseSoal> getSoal();
     @GET("kategori")
     Call<ResponseKategori> getKategori();
@@ -59,5 +59,5 @@ public interface ApiInterface {
     @FormUrlEncoded
     @POST("ujian/add")
     Call<ResponseBody> addUjian(@Field("idUser") String idUser,
-                                 @Field("totalSkor") Integer totalSkor);
+                                 @Field("totalSkor") String totalSkor);
 }
