@@ -60,10 +60,6 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        if(checkConnectivity() == true){
-
-           syncManager.syncUjian();
-        }
     }
 
     @Override
@@ -93,6 +89,7 @@ public class MainActivity extends AppCompatActivity
         //noinspection SimplifiableIfStatement
         if (id == R.id.actionLogout) {
             sessionManager.logoutUser();
+            finish();
             return true;
         }
         if (id == R.id.sync){

@@ -7,6 +7,7 @@ import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.AppCompatImageButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -18,6 +19,7 @@ import com.inkubator.adryan.learnarabic.model.MateriDetail;
 import com.inkubator.adryan.learnarabic.rest.ApiClient;
 import com.inkubator.adryan.learnarabic.rest.ApiInterface;
 import com.inkubator.adryan.learnarabic.response.ResponseMateriDetail;
+import com.lsjwzh.widget.recyclerviewpager.RecyclerViewPager;
 
 import java.util.HashMap;
 import java.util.List;
@@ -40,7 +42,6 @@ public class MateriDetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_materi_detail_recycle_view);
 
         dbHelper = new DbHelper(getApplicationContext());
-
         Intent i = getIntent();
         Integer idSubMateri = i.getIntExtra("idSubMateri",0);
           //  getSoal();
@@ -57,9 +58,15 @@ public class MateriDetailActivity extends AppCompatActivity {
     private void getMateriDetailFromDB(int idSubMateri) {
 
         List<MateriDetail> md = dbHelper.getMateriDetailBySubMateri(idSubMateri);
-        final RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycle_materi_detail);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-        recyclerView.setAdapter(new MateriDetailAdapter(md,getApplicationContext()));
+       // final RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycle_materi_detail);
+        //recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+        //recyclerView.setAdapter(new MateriDetailAdapter(md,getApplicationContext()));
+
+        RecyclerViewPager mRecyclerView = (RecyclerViewPager) findViewById(R.id.recycle_materi_detail);
+        LinearLayoutManager layout = new LinearLayoutManager(getApplicationContext(),LinearLayoutManager.HORIZONTAL,false);
+        mRecyclerView.setLayoutManager(layout);
+        mRecyclerView.setAdapter(new MateriDetailAdapter(md,getApplicationContext()));
+
 
 
     }

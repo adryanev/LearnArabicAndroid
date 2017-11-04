@@ -12,17 +12,18 @@
         android:layout_width="200dp"
         android:layout_height="200dp"
         android:src="@drawable/logo_uin"
-        android:layout_centerInParent="true"/>
+        android:layout_marginTop="100dp"
+        android:layout_centerHorizontal="true"/>
 
 
     <TextView
         android:layout_below="@id/gambarUin"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="50dp"
         android:id="@+id/namaApp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Learn Arabic"
-        android:layout_marginBottom="32dp"
+        android:layout_marginBottom="18dp"
         android:textSize="32sp"
         android:textStyle="normal"
         android:fontFamily="sans-serif-light"

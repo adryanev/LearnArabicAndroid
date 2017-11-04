@@ -21,6 +21,9 @@ public class MateriDetail {
     @SerializedName("gambar")
     @Expose
     private String gambar;
+    @SerializedName("suara")
+    @Expose
+    private String suara;
     @SerializedName("terjemahan")
     @Expose
     private String terjemahan;
@@ -76,4 +79,10 @@ public class MateriDetail {
         this.timestamp = timestamp;
     }
 
+    public String getSuara() {
+        return suara;
+    }
+    public void setSuara(String suara){
+        this.suara = suara;
+    }
 }

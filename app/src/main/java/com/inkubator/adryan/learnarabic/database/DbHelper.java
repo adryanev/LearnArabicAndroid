@@ -60,6 +60,7 @@ public class DbHelper extends SQLiteOpenHelper {
     private static final String KEY_IDMATERI_DETAIL = "idMateriDetail";
     private static final String KEY_ISI = "isi";
     private static final String KEY_TERJEMAHAN = "terjemahan";
+    private static final String KEY_SUARA = "suara";
 
     //field tabel soal
     private static final String KEY_IDSOAL = "idSoal";
@@ -396,6 +397,7 @@ public class DbHelper extends SQLiteOpenHelper {
         cv.put(KEY_IDSUBMATERI,materiDetail.getIdSubMateri());
         cv.put(KEY_ISI,materiDetail.getIsi());
         cv.put(KEY_GAMBAR,materiDetail.getGambar());
+        cv.put(KEY_SUARA,materiDetail.getSuara());
         cv.put(KEY_TERJEMAHAN,materiDetail.getTerjemahan());
         cv.put(KEY_TIMESTAMP,materiDetail.getTimestamp());
 
@@ -418,6 +420,7 @@ public class DbHelper extends SQLiteOpenHelper {
                 materiDetail.setIdMateriDetail(c.getInt(c.getColumnIndex(KEY_IDMATERI_DETAIL)));
                 materiDetail.setIdSubMateri(c.getInt(c.getColumnIndex(KEY_IDSUBMATERI)));
                 materiDetail.setGambar(c.getString(c.getColumnIndex(KEY_GAMBAR)));
+                materiDetail.setSuara(c.getString(c.getColumnIndex(KEY_SUARA)));
                 materiDetail.setIsi(c.getString(c.getColumnIndex(KEY_ISI)));
                 materiDetail.setTerjemahan(c.getString(c.getColumnIndex(KEY_TERJEMAHAN)));
                 materiDetail.setTimestamp(c.getString(c.getColumnIndex(KEY_TIMESTAMP)));
@@ -441,6 +444,7 @@ public class DbHelper extends SQLiteOpenHelper {
                 materiDetail.setIdMateriDetail(c.getInt(c.getColumnIndex(KEY_IDMATERI_DETAIL)));
                 materiDetail.setIdSubMateri(c.getInt(c.getColumnIndex(KEY_IDSUBMATERI)));
                 materiDetail.setGambar(c.getString(c.getColumnIndex(KEY_GAMBAR)));
+                materiDetail.setSuara(c.getString(c.getColumnIndex(KEY_SUARA)));
                 materiDetail.setIsi(c.getString(c.getColumnIndex(KEY_ISI)));
                 materiDetail.setTerjemahan(c.getString(c.getColumnIndex(KEY_TERJEMAHAN)));
                 materiDetail.setTimestamp(c.getString(c.getColumnIndex(KEY_TIMESTAMP)));
@@ -459,6 +463,7 @@ public class DbHelper extends SQLiteOpenHelper {
         cv.put(KEY_IDMATERI_DETAIL,materiDetail.getIdMateriDetail());
         cv.put(KEY_IDSUBMATERI,materiDetail.getIdSubMateri());
         cv.put(KEY_GAMBAR,materiDetail.getGambar());
+        cv.put(KEY_SUARA,materiDetail.getSuara());
         cv.put(KEY_ISI,materiDetail.getIsi());
         cv.put(KEY_TERJEMAHAN,materiDetail.getTerjemahan());
         cv.put(KEY_TIMESTAMP, materiDetail.getTimestamp());

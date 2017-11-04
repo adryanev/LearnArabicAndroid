@@ -1,14 +1,19 @@
 package com.inkubator.adryan.learnarabic.adapter;
 
 import android.content.Context;
+import android.media.AudioManager;
+import android.media.Image;
+import android.media.MediaPlayer;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.inkubator.adryan.learnarabic.R;
 import com.inkubator.adryan.learnarabic.config.ServerConfig;
@@ -16,6 +21,7 @@ import com.inkubator.adryan.learnarabic.database.DbHelper;
 import com.inkubator.adryan.learnarabic.model.MateriDetail;
 import com.squareup.picasso.Picasso;
 
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -28,22 +34,30 @@ public class MateriDetailAdapter extends RecyclerView.Adapter<MateriDetailAdapte
     private List<MateriDetail> materiDetailsList;
     private Context context;
 
+    MediaPlayer mp;
+
     public static class MateriDetailViewHolder extends RecyclerView.ViewHolder {
         LinearLayout materiDetailLayout;
         ImageView gambar;
         TextView arab;
         TextView terjemahan;
+        ImageButton im;
+
         public MateriDetailViewHolder(View itemView) {
             super(itemView);
             materiDetailLayout = (LinearLayout) itemView.findViewById(R.id.materi_layout);
             gambar = (ImageView) itemView.findViewById(R.id.iv_materi);
             arab = (TextView) itemView.findViewById(R.id.tv_arab);
             terjemahan = (TextView) itemView.findViewById(R.id.tv_terjemahan);
+            im = (ImageButton) itemView.findViewById(R.id.sound);
+
+            
         }
     }
 
     public MateriDetailAdapter(List<MateriDetail> materiDetails, Context context){
         db = new DbHelper(context);
+        mp = new MediaPlayer();
         this.materiDetailsList = materiDetails;
         this.context = context;
     }
@@ -55,20 +69,38 @@ public class MateriDetailAdapter extends RecyclerView.Adapter<MateriDetailAdapte
     }
 
     @Override
-    public void onBindViewHolder(MateriDetailViewHolder holder, int position) {
-        MateriDetail materiDetail = materiDetailsList.get(position);
-        Picasso.with(context).load(ServerConfig.IMAGE_FOLDER+materiDetail.getGambar()).resize(300,300).centerCrop().into(holder.gambar);
+    public void onBindViewHolder(final MateriDetailViewHolder holder, int position) {
+        final MateriDetail materiDetail = materiDetailsList.get(position);
+        Picasso.with(context).load(ServerConfig.IMAGE_FOLDER+materiDetail.getGambar()).into(holder.gambar);
         holder.arab.setText(Html.fromHtml(materiDetail.getIsi()));
         holder.arab.setTextDirection(View.TEXT_DIRECTION_ANY_RTL);
         Integer idKategori = db.getIdKategoriFromSubMateri(materiDetail.getIdSubMateri());
         switch (idKategori){
             case 2:
             holder.arab.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-        }
-        if(materiDetail.getTerjemahan()!= null && !materiDetail.getTerjemahan().isEmpty()){
-            holder.terjemahan.setText(Html.fromHtml(materiDetail.getTerjemahan()));
+            holder.im.setVisibility(View.VISIBLE);
         }
 
+        holder.im.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(context, "Suara Keluar", Toast.LENGTH_SHORT).show();
+                mp.setAudioStreamType(AudioManager.STREAM_MUSIC);
+                try {
+                    mp.setDataSource(ServerConfig.SUARA_FOLDER+materiDetail.getSuara());
+                    mp.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                        @Override
+                        public void onPrepared(MediaPlayer mp) {
+                            mp.start();
+                        }
+                    });
+                    mp.prepareAsync();
+                } catch (IOException e) {
+                    Toast.makeText(context,"Tidak menemukan file mp3 di server.",Toast.LENGTH_SHORT).show();
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 
     @Override
