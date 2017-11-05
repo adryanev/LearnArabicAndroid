@@ -34,13 +34,13 @@ public class HasilActivity extends AppCompatActivity {
         if(score <50)
         {
             txtScore.setTextColor(Color.RED);
-            txtResult.setText("Fail");
+            txtResult.setText("Gagal");
             txtGreetings.setText("Maaf Nilai anda tidak mencukupi untuk lulus di Ujian ini.");
         }
         else
         {
             txtScore.setTextColor(Color.GREEN);
-            txtResult.setText("Pass");
+            txtResult.setText("Lulus");
             txtGreetings.setText("Selamat Anda Lulus!!!");
         }
         backTo.setOnClickListener(new View.OnClickListener() {

@@ -41,7 +41,7 @@ public class MateriAdapter extends RecyclerView.Adapter<MateriAdapter.MateriView
         }
         public void bind(final Materi materi, final OnItemClickListener listener){
 
-            namaMateri.setText(materi.getIdMateri()+". "+materi.getNamaMateri());
+            namaMateri.setText(materi.getNamaMateri());
             itemView.setOnClickListener(new View.OnClickListener(){
 
                 @Override

@@ -4,9 +4,11 @@ import android.content.Context;
 import android.media.AudioManager;
 import android.media.Image;
 import android.media.MediaPlayer;
+import android.os.Build;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -56,10 +58,9 @@ public class MateriDetailAdapter extends RecyclerView.Adapter<MateriDetailAdapte
         }
     }
 
-    public MateriDetailAdapter(List<MateriDetail> materiDetails, Context context){
+    public MateriDetailAdapter(List<MateriDetail> materiDetails, Context context, MediaPlayer mp){
         db = new DbHelper(context);
-        mp = new MediaPlayer();
-        mp.setAudioStreamType(AudioManager.STREAM_MUSIC);
+        this.mp = mp;
         this.materiDetailsList = materiDetails;
         this.context = context;
     }
@@ -75,24 +76,23 @@ public class MateriDetailAdapter extends RecyclerView.Adapter<MateriDetailAdapte
     public void onBindViewHolder(final MateriDetailViewHolder holder, int position) {
         final MateriDetail materiDetail = materiDetailsList.get(position);
         Picasso.with(context).load(ServerConfig.IMAGE_FOLDER+materiDetail.getGambar()).into(holder.gambar);
-        holder.arab.setText(Html.fromHtml(materiDetail.getIsi()));
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            holder.arab.setText(Html.fromHtml(materiDetail.getIsi(),Html.FROM_HTML_MODE_LEGACY));
+
+        }else{
+            holder.arab.setText(Html.fromHtml(materiDetail.getIsi()));
+        }
+
         holder.arab.setTextDirection(View.TEXT_DIRECTION_ANY_RTL);
         Integer idKategori = db.getIdKategoriFromSubMateri(materiDetail.getIdSubMateri());
         switch (idKategori){
-            case 2:
+            case 3:
             holder.arab.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+            holder.arab.setTextSize(TypedValue.COMPLEX_UNIT_PT,11);
 
         }
-        try {
 
-            mp.setDataSource(ServerConfig.SUARA_FOLDER+materiDetail.getSuara());
-            mp.prepare();
-
-
-        } catch (IOException e) {
-            Toast.makeText(context,"Tidak menemukan file mp3 di server.",Toast.LENGTH_SHORT).show();
-            e.printStackTrace();
-        }
         if(materiDetailsList.get(position).getSuara()!=null){
             holder.im.setVisibility(View.VISIBLE);
         }
@@ -100,17 +100,36 @@ public class MateriDetailAdapter extends RecyclerView.Adapter<MateriDetailAdapte
         holder.im.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mp.start();
+                try {
+                    mp.release();
+                    mp = new MediaPlayer();
+                    mp.setAudioStreamType(AudioManager.STREAM_MUSIC);
+                    mp.setDataSource(ServerConfig.SUARA_FOLDER+materiDetail.getSuara());
+                    mp.prepareAsync();
+                    mp.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                        @Override
+                        public void onPrepared(MediaPlayer mp) {
+                            if(mp.isPlaying()){ mp.pause(); mp.release();}
+                            else{mp.start();}
+                        }
+                    });
+                    mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                        @Override
+                        public void onCompletion(MediaPlayer mp) {
+                            mp.release();
+                            mp = null;
+                        }
+
+                    });
 
 
+                } catch (IOException e) {
+                    Toast.makeText(context,"Tidak menemukan file mp3 di server.",Toast.LENGTH_SHORT).show();
+                    e.printStackTrace();
+                }
             }
         });
-        mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer mp) {
-                mp.release();
-            }
-        });
+
     }
 
     @Override

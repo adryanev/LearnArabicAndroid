@@ -8,6 +8,8 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.media.MediaPlayer;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.preference.PreferenceManager;
@@ -76,6 +78,7 @@ public class UjianActivity extends AppCompatActivity implements View.OnClickList
     List<Soal> listSoalUjian;
     ImageView gambarSoal;
     DbHelper db;
+    MediaPlayer mp;
     private static final Integer SYNCHED_FALSE = 0;
     private static final Integer SYNCHED_TRUE = 1;
     private  static final String TAG = UjianActivity.class.getSimpleName();
@@ -134,7 +137,11 @@ public class UjianActivity extends AppCompatActivity implements View.OnClickList
             noSoal.setText(currentQue+"/"+listSoalUjian.size());
             soalSekarang = listSoalUjian.get(currentQue-1);
 
-            textSoal.setText(Html.fromHtml(soalSekarang.getSoal()));
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                textSoal.setText(Html.fromHtml(soalSekarang.getSoal(),Html.FROM_HTML_MODE_LEGACY));
+            }else{
+                textSoal.setText(Html.fromHtml(soalSekarang.getSoal()));
+            }
             Picasso.with(getApplicationContext()).load(ServerConfig.IMAGE_FOLDER+soalSekarang.getGambar()).resize(300,300).into(gambarSoal);
 
             a.setText("A. "+soalSekarang.getA());
@@ -218,6 +225,8 @@ public class UjianActivity extends AppCompatActivity implements View.OnClickList
     private void initView() {
         context = this.getApplicationContext();
         pd = ProgressDialog.show(this,null,"Sedang menyiapkan soal ujian",true,false);
+        mp = MediaPlayer.create(UjianActivity.this,R.raw.bgm);
+        mp.start();
 
         score = 0;
         currentQue = 0;
@@ -317,4 +326,9 @@ public class UjianActivity extends AppCompatActivity implements View.OnClickList
 
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mp.stop();
+    }
 }

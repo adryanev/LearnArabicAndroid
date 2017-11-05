@@ -37,6 +37,7 @@ public class MateriDetailActivity extends AppCompatActivity {
 
     private  static final String TAG = MainActivity.class.getSimpleName();
     DbHelper dbHelper;
+    MediaPlayer mp;
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,7 +47,7 @@ public class MateriDetailActivity extends AppCompatActivity {
         Intent i = getIntent();
         Integer idSubMateri = i.getIntExtra("idSubMateri",0);
           //  getSoal();
-
+        mp = new MediaPlayer();
         getMateriDetailFromDB(idSubMateri);
 
         Integer idKategori = dbHelper.getIdKategoriFromSubMateri(idSubMateri);
@@ -67,9 +68,7 @@ public class MateriDetailActivity extends AppCompatActivity {
         RecyclerViewPager mRecyclerView = (RecyclerViewPager) findViewById(R.id.recycle_materi_detail);
         LinearLayoutManager layout = new LinearLayoutManager(getApplicationContext(),LinearLayoutManager.HORIZONTAL,false);
         mRecyclerView.setLayoutManager(layout);
-        mRecyclerView.setAdapter(new MateriDetailAdapter(md,getApplicationContext()));
-
-
+        mRecyclerView.setAdapter(new MateriDetailAdapter(md,getApplicationContext(),mp));
 
     }
 
@@ -92,7 +91,7 @@ public class MateriDetailActivity extends AppCompatActivity {
                     List<MateriDetail> materiDetails = response.body().getMateriDetails();
                     Log.d(TAG,"Succes receiving: "+materiDetails.size());
 
-                    recyclerView.setAdapter(new MateriDetailAdapter(materiDetails,getApplicationContext()));
+                    recyclerView.setAdapter(new MateriDetailAdapter(materiDetails,getApplicationContext(),mp));
                 }
                 else{
                     int statusCode  = response.code();
@@ -117,4 +116,5 @@ public class MateriDetailActivity extends AppCompatActivity {
         else return false;
 
     }
+
 }

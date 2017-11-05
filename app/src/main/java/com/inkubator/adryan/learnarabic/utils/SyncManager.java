@@ -69,27 +69,7 @@ public class SyncManager extends ContextWrapper {
         this.db = new DbHelper(this);
     }
 
-    public void syncUjian(){
-        List<Ujian> listIdUjian = db.getNotSyncListUjian();
-        for(final Ujian u: listIdUjian){
-            ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
-            Call<ResponseBody> call = apiService.addUjian(u.getIdUser().toString(), u.getTotalSkor().toString());
-            call.enqueue(new Callback<ResponseBody>() {
-                @Override
-                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                    if (response.isSuccessful()) {
-                        Log.d(TAG, "Success Mengirimkan data ujian ke server.");
-                    }
-                }
 
-                @Override
-                public void onFailure(Call<ResponseBody> call, Throwable t) {
-                    Log.e(TAG, "Gagal Sinkronisasi Ujian");
-                }
-
-            });
-        }
-    }
     public void syncAll(){
         pb = new ProgressDialog(this);
         pb.setCancelable(false);
@@ -97,7 +77,6 @@ public class SyncManager extends ContextWrapper {
         syncMateri();
         syncSubMater();
         syncMateriDetail();
-        syncSoal();
         Toast.makeText(this,"Sinkronisasi selesai",Toast.LENGTH_SHORT).show();
         
     }
