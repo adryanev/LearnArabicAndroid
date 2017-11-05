@@ -102,7 +102,7 @@ public class LoginActivity extends AppCompatActivity{
 
     private void requestLogin() throws UnsupportedEncodingException, NoSuchAlgorithmException {
         final String stringUsername = username.getText().toString();
-        String stringPassword = StringEncryption.SHA1(password.getText().toString());
+        final String stringPassword = StringEncryption.SHA1(password.getText().toString());
 
         apiService.loginRequest(stringUsername, stringPassword).enqueue(new Callback<ResponseLogin>() {
             @Override
@@ -110,18 +110,22 @@ public class LoginActivity extends AppCompatActivity{
                 if (response.isSuccessful()) {
                     Log.i("Login", "onResponse: Success ");
                     loading.dismiss();
-
+                    Log.d("login", stringPassword);
                     String success = response.body().getStatus();
                     List<User> user = response.body().getData();
                     if(success.equals("success")){
-                        session.createLoginSession(user.get(0).getIdUser().toString(),user.get(0).getUsername(),user.get(0).getPassword(),
-                                user.get(0).getNama(),user.get(0).getEmail(),user.get(0).getTanggalLahir());
-
+                        if(!user.isEmpty()) {
+                            session.createLoginSession(user.get(0).getIdUser().toString(), user.get(0).getUsername(), user.get(0).getPassword(),
+                                    user.get(0).getNama(), user.get(0).getEmail(), user.get(0).getTanggalLahir());
+                        }else{
+                            Toast.makeText(context,"Username atau password salah.",Toast.LENGTH_SHORT).show();
+                        }
                         Toast.makeText(context,"Sukses Login "+ user.get(0).getNama(),Toast.LENGTH_SHORT).show();
 
                         startActivity(new Intent(context,WelcomeActivity.class));
 
                         LoginActivity.this.overridePendingTransition(android.R.anim.fade_in,android.R.anim.fade_out);
+                        finish();
 
 
                     }else{

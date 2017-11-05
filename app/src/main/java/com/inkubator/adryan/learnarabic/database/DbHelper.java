@@ -29,7 +29,7 @@ public class DbHelper extends SQLiteOpenHelper {
     private static final String LOG = "DbHelper";
 
     //versi database
-    private static final Integer DATABASE_VERSION = 4;
+    private static final Integer DATABASE_VERSION = 5;
 
     //nama database
     private static final String DATABASE_NAME = "app-learning";
@@ -112,6 +112,7 @@ public class DbHelper extends SQLiteOpenHelper {
             KEY_IDSUBMATERI+" INTEGER,"+
             KEY_ISI+" TEXT, "+
             KEY_GAMBAR+" TEXT,"+
+            KEY_SUARA+" TEXT,"+
             KEY_TERJEMAHAN+" TEXT,"+
             KEY_TIMESTAMP+" DATETIME,"+
             "FOREIGN KEY ("+KEY_IDSUBMATERI+")"+

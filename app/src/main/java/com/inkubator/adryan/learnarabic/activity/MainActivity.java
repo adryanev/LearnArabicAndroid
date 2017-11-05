@@ -4,11 +4,9 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
+import android.os.PersistableBundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -22,6 +20,7 @@ import com.facebook.stetho.Stetho;
 import com.inkubator.adryan.learnarabic.R;
 import com.inkubator.adryan.learnarabic.fragment.FragmentDefault;
 import com.inkubator.adryan.learnarabic.fragment.FragmentUjian;
+import com.inkubator.adryan.learnarabic.fragment.FragmentVideo;
 import com.inkubator.adryan.learnarabic.fragment.MateriFragment;
 import com.inkubator.adryan.learnarabic.utils.SessionManager;
 import com.inkubator.adryan.learnarabic.utils.SyncManager;
@@ -38,16 +37,21 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         Stetho.initializeWithDefaults(this);
         setContentView(R.layout.activity_main);
+
+        if(savedInstanceState!=null){
+            fragment = getSupportFragmentManager().getFragment(savedInstanceState, "myFragmentName");
+        }else{
+            fragment = new FragmentDefault();
+        }
         sessionManager = new SessionManager(getApplicationContext());
         sessionManager.checkLogin();
 
         syncManager = new SyncManager(MainActivity.this);
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.fragment_container, new FragmentDefault());
+        transaction.replace(R.id.fragment_container, fragment);
         transaction.commit();
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle("Learn Arabic");
         setSupportActionBar(toolbar);
 
 
@@ -114,13 +118,13 @@ public class MainActivity extends AppCompatActivity
 
         if (id == R.id.nav_home) {
             fragment = new FragmentDefault();
-            toolbar.setTitle("Learn Arabic");
         } else if (id == R.id.nav_materi) {
             fragment = new MateriFragment();
-            toolbar.setTitle("Materi");
         } else if (id == R.id.nav_ujian) {
             fragment = new FragmentUjian();
-            toolbar.setTitle("Ujian");
+        }
+        else if(id == R.id.nav_video){
+            fragment = new FragmentVideo();
         }
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.setCustomAnimations(android.R.anim.slide_out_right,android.R.anim.slide_in_left);
@@ -140,5 +144,11 @@ public class MainActivity extends AppCompatActivity
        if(networkInfo !=null && networkInfo.isConnected()) return true;
        else return false;
 
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        getSupportFragmentManager().putFragment(outState, "myFragmentName", fragment);
     }
 }

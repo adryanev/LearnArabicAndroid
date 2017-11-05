@@ -31,6 +31,7 @@ public class FragmentUjian extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_ujian,container,false);
+        getActivity().setTitle("Ujian");
         final Intent i = new Intent(getActivity(),UjianActivity.class);
         btnUjian = (Button) view.findViewById(R.id.btn_kerjakan);
         btnUjian.setOnClickListener(new View.OnClickListener() {

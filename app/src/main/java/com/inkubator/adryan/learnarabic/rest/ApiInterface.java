@@ -12,6 +12,7 @@ import com.inkubator.adryan.learnarabic.response.ResponseMateriDetail;
 import com.inkubator.adryan.learnarabic.response.ResponseSoal;
 import com.inkubator.adryan.learnarabic.response.ResponseSubMateri;
 import com.inkubator.adryan.learnarabic.response.ResponseUjian;
+import com.inkubator.adryan.learnarabic.response.ResponseVideo;
 
 import java.util.HashMap;
 
@@ -38,9 +39,10 @@ public interface ApiInterface {
     Call<ResponseSoal> getSoal();
     @GET("kategori")
     Call<ResponseKategori> getKategori();
-
     @GET("sub-materi")
     Call<ResponseSubMateri> getSubMateri();
+    @GET("video")
+    Call<ResponseVideo> getVideo();
 
     @FormUrlEncoded
     @POST("register/register-user")

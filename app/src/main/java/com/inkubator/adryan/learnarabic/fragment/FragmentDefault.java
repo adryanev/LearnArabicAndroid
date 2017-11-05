@@ -19,6 +19,7 @@ public class FragmentDefault extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.home_layout,container,false);
+        getActivity().setTitle("Learn-Arabic");
         return view;
     }
 }

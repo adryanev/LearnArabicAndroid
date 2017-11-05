@@ -102,7 +102,7 @@ public class UjianActivity extends AppCompatActivity implements View.OnClickList
     }
 
     private void initTimer() {
-        countDownTimer = new CountDownTimer(10000,1000) {
+        countDownTimer = new CountDownTimer(60000,1000) {
             @Override
             public void onTick(long millisUntilFinished) {
                 long sec = millisUntilFinished/1000;

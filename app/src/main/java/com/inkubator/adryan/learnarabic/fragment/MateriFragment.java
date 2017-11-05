@@ -56,6 +56,7 @@ public class MateriFragment extends Fragment{
 
         db = new DbHelper(getContext());
         View view = inflater.inflate(R.layout.fragment_materi,container,false);
+        getActivity().setTitle("Materi");
 
         prepareMateri();
         expListView = (ExpandableListView) view.findViewById(R.id.lvexp);

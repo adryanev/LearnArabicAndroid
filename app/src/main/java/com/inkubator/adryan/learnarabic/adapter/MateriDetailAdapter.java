@@ -6,6 +6,7 @@ import android.media.Image;
 import android.media.MediaPlayer;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -58,6 +59,7 @@ public class MateriDetailAdapter extends RecyclerView.Adapter<MateriDetailAdapte
     public MateriDetailAdapter(List<MateriDetail> materiDetails, Context context){
         db = new DbHelper(context);
         mp = new MediaPlayer();
+        mp.setAudioStreamType(AudioManager.STREAM_MUSIC);
         this.materiDetailsList = materiDetails;
         this.context = context;
     }
@@ -65,6 +67,7 @@ public class MateriDetailAdapter extends RecyclerView.Adapter<MateriDetailAdapte
     @Override
     public MateriDetailViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context).inflate(R.layout.materi_detail_card_view,parent,false);
+        Log.d("MateriDetailAdapter", "Sukses Meload Materi Detail CardView");
         return new MateriDetailViewHolder(view);
     }
 
@@ -78,27 +81,34 @@ public class MateriDetailAdapter extends RecyclerView.Adapter<MateriDetailAdapte
         switch (idKategori){
             case 2:
             holder.arab.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+
+        }
+        try {
+
+            mp.setDataSource(ServerConfig.SUARA_FOLDER+materiDetail.getSuara());
+            mp.prepare();
+
+
+        } catch (IOException e) {
+            Toast.makeText(context,"Tidak menemukan file mp3 di server.",Toast.LENGTH_SHORT).show();
+            e.printStackTrace();
+        }
+        if(materiDetailsList.get(position).getSuara()!=null){
             holder.im.setVisibility(View.VISIBLE);
         }
 
         holder.im.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(context, "Suara Keluar", Toast.LENGTH_SHORT).show();
-                mp.setAudioStreamType(AudioManager.STREAM_MUSIC);
-                try {
-                    mp.setDataSource(ServerConfig.SUARA_FOLDER+materiDetail.getSuara());
-                    mp.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-                        @Override
-                        public void onPrepared(MediaPlayer mp) {
-                            mp.start();
-                        }
-                    });
-                    mp.prepareAsync();
-                } catch (IOException e) {
-                    Toast.makeText(context,"Tidak menemukan file mp3 di server.",Toast.LENGTH_SHORT).show();
-                    e.printStackTrace();
-                }
+                mp.start();
+
+
+            }
+        });
+        mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mp) {
+                mp.release();
             }
         });
     }

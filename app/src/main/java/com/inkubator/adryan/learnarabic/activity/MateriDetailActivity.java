@@ -2,6 +2,7 @@ package com.inkubator.adryan.learnarabic.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -54,6 +55,7 @@ public class MateriDetailActivity extends AppCompatActivity {
         String namaMateri = dbHelper.getNamaMateri(idMateri);
         getSupportActionBar().setTitle(namaMateri+" - "+namaKategori);
     }
+
 
     private void getMateriDetailFromDB(int idSubMateri) {
 
