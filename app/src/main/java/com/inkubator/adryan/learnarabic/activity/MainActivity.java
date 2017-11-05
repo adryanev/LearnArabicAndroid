@@ -4,11 +4,9 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
+import android.os.PersistableBundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -18,9 +16,11 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.facebook.stetho.Stetho;
 import com.inkubator.adryan.learnarabic.R;
 import com.inkubator.adryan.learnarabic.fragment.FragmentDefault;
 import com.inkubator.adryan.learnarabic.fragment.FragmentUjian;
+import com.inkubator.adryan.learnarabic.fragment.FragmentVideo;
 import com.inkubator.adryan.learnarabic.fragment.MateriFragment;
 import com.inkubator.adryan.learnarabic.utils.SessionManager;
 import com.inkubator.adryan.learnarabic.utils.SyncManager;
@@ -30,18 +30,28 @@ public class MainActivity extends AppCompatActivity
 
     SessionManager sessionManager;
     Fragment fragment;
+    Toolbar toolbar;
+    SyncManager syncManager;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Stetho.initializeWithDefaults(this);
         setContentView(R.layout.activity_main);
+
+        if(savedInstanceState!=null){
+            fragment = getSupportFragmentManager().getFragment(savedInstanceState, "myFragmentName");
+        }else{
+            fragment = new FragmentDefault();
+        }
         sessionManager = new SessionManager(getApplicationContext());
         sessionManager.checkLogin();
 
+        syncManager = new SyncManager(MainActivity.this);
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.fragment_container, new FragmentDefault());
+        transaction.replace(R.id.fragment_container, fragment);
         transaction.commit();
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
 
@@ -53,6 +63,7 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
     }
 
     @Override
@@ -82,6 +93,7 @@ public class MainActivity extends AppCompatActivity
         //noinspection SimplifiableIfStatement
         if (id == R.id.actionLogout) {
             sessionManager.logoutUser();
+            finish();
             return true;
         }
         if (id == R.id.sync){
@@ -92,7 +104,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void syncDatabase() {
-        SyncManager syncManager = new SyncManager();
+
         syncManager.syncAll();
     }
 
@@ -110,8 +122,9 @@ public class MainActivity extends AppCompatActivity
             fragment = new MateriFragment();
         } else if (id == R.id.nav_ujian) {
             fragment = new FragmentUjian();
-        } else if (id == R.id.nav_profil) {
-
+        }
+        else if(id == R.id.nav_video){
+            fragment = new FragmentVideo();
         }
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.setCustomAnimations(android.R.anim.slide_out_right,android.R.anim.slide_in_left);
@@ -128,7 +141,14 @@ public class MainActivity extends AppCompatActivity
         ConnectivityManager connectivityManager = (ConnectivityManager) this.getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
 
-        return (networkInfo !=null && networkInfo.isConnected());
+       if(networkInfo !=null && networkInfo.isConnected()) return true;
+       else return false;
 
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        getSupportFragmentManager().putFragment(outState, "myFragmentName", fragment);
     }
 }

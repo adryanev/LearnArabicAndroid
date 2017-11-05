@@ -95,6 +95,15 @@ public class RegisterActivity extends AppCompatActivity{
                 }
         }});
 
+        login.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(RegisterActivity.this, LoginActivity.class);
+                startActivity(i);
+                finish();
+            }
+        });
+
     }
 
     private void requestRegister() throws UnsupportedEncodingException, NoSuchAlgorithmException {

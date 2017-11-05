@@ -12,18 +12,18 @@ public class MateriDetail {
     @SerializedName("idMateriDetail")
     @Expose
     private Integer idMateriDetail;
-    @SerializedName("idKategori")
+    @SerializedName("idSubMateri")
     @Expose
-    private Integer idKategori;
-    @SerializedName("idMateri")
-    @Expose
-    private Integer idMateri;
+    private Integer idSubMateri;
     @SerializedName("isi")
     @Expose
     private String isi;
     @SerializedName("gambar")
     @Expose
     private String gambar;
+    @SerializedName("suara")
+    @Expose
+    private String suara;
     @SerializedName("terjemahan")
     @Expose
     private String terjemahan;
@@ -39,20 +39,12 @@ public class MateriDetail {
         this.idMateriDetail = idMateriDetail;
     }
 
-    public Integer getIdKategori() {
-        return idKategori;
+    public Integer getIdSubMateri() {
+        return idSubMateri;
     }
 
-    public void setIdKategori(Integer idKategori) {
-        this.idKategori = idKategori;
-    }
-
-    public Integer getIdMateri() {
-        return idMateri;
-    }
-
-    public void setIdMateri(Integer idMateri) {
-        this.idMateri = idMateri;
+    public void setIdSubMateri(Integer idSubMateri) {
+        this.idSubMateri = idSubMateri;
     }
 
     public String getIsi() {
@@ -64,7 +56,7 @@ public class MateriDetail {
     }
 
     public String getGambar() {
-        return ServerConfig.IMAGE_FOLDER+gambar;
+        return gambar;
     }
 
     public void setGambar(String gambar) {
@@ -87,4 +79,10 @@ public class MateriDetail {
         this.timestamp = timestamp;
     }
 
+    public String getSuara() {
+        return suara;
+    }
+    public void setSuara(String suara){
+        this.suara = suara;
+    }
 }

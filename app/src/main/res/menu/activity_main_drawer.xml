@@ -15,9 +15,11 @@
             android:icon="@drawable/ic_question_answer_black_24dp"
             android:title="Ujian" />
         <item
-            android:id="@+id/nav_profil"
-            android:icon="@drawable/ic_person_black_24dp"
-            android:title="Profil" />
+            android:id="@+id/nav_video"
+            android:icon="@drawable/ic_ondemand_video_black_24dp"
+            android:title="Video"
+            />
+        
     </group>
 
 </menu>

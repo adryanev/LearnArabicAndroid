@@ -10,19 +10,25 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ExpandableListView;
+import android.widget.Toast;
 
 import com.inkubator.adryan.learnarabic.R;
 import com.inkubator.adryan.learnarabic.activity.MainActivity;
 import com.inkubator.adryan.learnarabic.activity.MateriDetailActivity;
+import com.inkubator.adryan.learnarabic.adapter.ExpandableListAdapter;
 import com.inkubator.adryan.learnarabic.adapter.MateriAdapter;
-import com.inkubator.adryan.learnarabic.adapter.MateriDetailAdapter;
+import com.inkubator.adryan.learnarabic.database.DbHelper;
+import com.inkubator.adryan.learnarabic.model.Kategori;
 import com.inkubator.adryan.learnarabic.model.Materi;
 import com.inkubator.adryan.learnarabic.model.MateriDetail;
+import com.inkubator.adryan.learnarabic.response.ResponseKategori;
 import com.inkubator.adryan.learnarabic.response.ResponseMateri;
 import com.inkubator.adryan.learnarabic.rest.ApiClient;
 import com.inkubator.adryan.learnarabic.rest.ApiInterface;
-import com.inkubator.adryan.learnarabic.response.ResponseMateriDetail;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import retrofit2.Call;
@@ -36,13 +42,73 @@ import retrofit2.Response;
 public class MateriFragment extends Fragment{
 
     private  static final String TAG = MainActivity.class.getSimpleName();
+    DbHelper db;
+
+    com.inkubator.adryan.learnarabic.adapter.ExpandableListAdapter listAdapter;
+    ExpandableListView expListView;
+    List<String> listDataHeader;
+    HashMap<String, List<String>> listDataChild;
+
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
+        db = new DbHelper(getContext());
         View view = inflater.inflate(R.layout.fragment_materi,container,false);
+        getActivity().setTitle("Materi");
 
+        prepareMateri();
+        expListView = (ExpandableListView) view.findViewById(R.id.lvexp);
+        listAdapter = new ExpandableListAdapter(getContext(), listDataHeader, listDataChild);
+        expListView.setAdapter(listAdapter);
+
+        expListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
+
+            @Override
+            public boolean onChildClick(ExpandableListView parent, View v,
+                                        int groupPosition, int childPosition, long id) {
+
+
+                String idMateri = listDataHeader.get(groupPosition).substring(0,1);
+                String idKategori = listDataChild.get(listDataHeader.get(groupPosition)).get(childPosition).substring(0,1);
+
+                Integer idSubMateri = db.getSubMateriByMateriKategori(Integer.parseInt(idMateri),Integer.parseInt(idKategori));
+                Intent i = new Intent(getActivity(), MateriDetailActivity.class);
+                i.putExtra("idSubMateri",idSubMateri);
+                startActivity(i);
+                return false;
+            }
+        });
+        //getMateri(view);
+
+        return view;
+    }
+
+    private void prepareMateri() {
+
+        listDataHeader = new ArrayList<String>();
+        listDataChild = new HashMap<String, List<String>>();
+        List<String> namaKate  = new ArrayList<>();
+
+        List<Materi> materis = db.getSemuaMateri();
+        List<Kategori>kategoris = db.kategoriList();
+        for (Materi m : materis){
+            listDataHeader.add(m.getIdMateri()+". "+m.getNamaMateri());
+        }
+        for(Kategori k : kategoris){
+            namaKate.add(k.getIdKategori()+". "+k.getNamaKategori());
+        }
+
+        for(int i = 0; i< materis.size(); i++){
+            listDataChild.put(listDataHeader.get(i),namaKate);
+        }
+
+    }
+
+
+    /*
+    private void getMateri(View view) {
         final RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.recycle);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
@@ -81,6 +147,6 @@ public class MateriFragment extends Fragment{
                 Log.e(TAG, t.toString());
             }
         });
-        return view;
     }
+    */
 }

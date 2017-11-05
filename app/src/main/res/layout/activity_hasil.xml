@@ -9,7 +9,8 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context=".activity.HasilActivity">
+    tools:context=".activity.HasilActivity"
+    android:background="@drawable/bg3">
 
     <TextView
         android:id="@+id/txtScore"
@@ -18,7 +19,8 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="85dp"
-        android:text="Score"/>
+        android:textSize="13pt"
+        android:text="Nilai: "/>
 
     <TextView
         android:id="@+id/txtResult"
@@ -34,10 +36,23 @@
         android:id="@+id/txtGreetings"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="107dp"
+        android:layout_marginTop="20dp"
         android:text="Greetings"
         android:textSize="30sp"
         android:textStyle="bold"
         android:layout_below="@+id/txtResult"
         android:layout_centerHorizontal="true"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/back_to_home_button"
+        android:layout_below="@+id/txtGreetings"
+        android:gravity="center"
+        android:text="Kembali ke halaman Utama"
+        android:layout_marginTop="20dp"
+        android:layout_centerHorizontal="true"
+        android:textColor="#fff"
+        android:padding="10dp"
+        android:background="@color/colorPrimary"/>
 </RelativeLayout>

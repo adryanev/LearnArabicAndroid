@@ -2,12 +2,24 @@ package com.inkubator.adryan.learnarabic.activity;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.ContextWrapper;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
+import android.media.MediaPlayer;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.text.BidiFormatter;
+import android.text.Html;
+import android.text.TextDirectionHeuristic;
+import android.text.TextDirectionHeuristics;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
@@ -19,18 +31,29 @@ import android.widget.TextView;
 
 import com.inkubator.adryan.learnarabic.R;
 import com.inkubator.adryan.learnarabic.adapter.MateriDetailAdapter;
+import com.inkubator.adryan.learnarabic.config.ServerConfig;
+import com.inkubator.adryan.learnarabic.database.DbHelper;
 import com.inkubator.adryan.learnarabic.model.MateriDetail;
 import com.inkubator.adryan.learnarabic.model.Soal;
 import com.inkubator.adryan.learnarabic.response.ResponseMateriDetail;
 import com.inkubator.adryan.learnarabic.response.ResponseSoal;
+import com.inkubator.adryan.learnarabic.response.ResponseUjian;
 import com.inkubator.adryan.learnarabic.rest.ApiClient;
 import com.inkubator.adryan.learnarabic.rest.ApiInterface;
+import com.inkubator.adryan.learnarabic.utils.SessionManager;
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 
 import org.w3c.dom.Text;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -40,7 +63,8 @@ import retrofit2.Response;
  */
 
 public class UjianActivity extends AppCompatActivity implements View.OnClickListener {
-
+    SharedPreferences s;
+    SessionManager sm;
     Context context;
     TextView timer, textSoal, noSoal;
     Button a,b,c,d;
@@ -49,26 +73,39 @@ public class UjianActivity extends AppCompatActivity implements View.OnClickList
     Animation animation;
     ProgressDialog pd;
     Soal soalSekarang;
-    static Double score;
+    static Integer score;
     static int currentQue;
     List<Soal> listSoalUjian;
     ImageView gambarSoal;
-
+    DbHelper db;
+    MediaPlayer mp;
+    private static final Integer SYNCHED_FALSE = 0;
+    private static final Integer SYNCHED_TRUE = 1;
     private  static final String TAG = UjianActivity.class.getSimpleName();
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ujian);
+        db = new DbHelper(getApplicationContext());
         initView();
         initSoal();
+        //initSoalFromDB();
         initTimer();
         blinkText();
+        getSupportActionBar().setTitle("Ujian");
+
+    }
+
+    private void initSoalFromDB() {
+        listSoalUjian = db.getSoalByLimit((long) 5);
+        pd.dismiss();
+        getNextQuestion();
 
 
     }
 
     private void initTimer() {
-        countDownTimer = new CountDownTimer(10000,1000) {
+        countDownTimer = new CountDownTimer(60000,1000) {
             @Override
             public void onTick(long millisUntilFinished) {
                 long sec = millisUntilFinished/1000;
@@ -99,8 +136,13 @@ public class UjianActivity extends AppCompatActivity implements View.OnClickList
             pb.setProgress((currentQue*100)/listSoalUjian.size());
             noSoal.setText(currentQue+"/"+listSoalUjian.size());
             soalSekarang = listSoalUjian.get(currentQue-1);
-            textSoal.setText(soalSekarang.getSoal());
-            Picasso.with(getApplicationContext()).load(soalSekarang.getGambar()).resize(300,300).into(gambarSoal);
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                textSoal.setText(Html.fromHtml(soalSekarang.getSoal(),Html.FROM_HTML_MODE_LEGACY));
+            }else{
+                textSoal.setText(Html.fromHtml(soalSekarang.getSoal()));
+            }
+            Picasso.with(getApplicationContext()).load(ServerConfig.IMAGE_FOLDER+soalSekarang.getGambar()).resize(300,300).into(gambarSoal);
 
             a.setText("A. "+soalSekarang.getA());
             b.setText("B. "+soalSekarang.getB());
@@ -141,9 +183,35 @@ public class UjianActivity extends AppCompatActivity implements View.OnClickList
     }
 
     private void sendResult() {
+        sm = new SessionManager(getApplicationContext());
+        final HashMap<String,String> user = sm.getUserDetail();
+        ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
+        Log.d(TAG,"idUser = "+user.get("idUser")+" Score: "+score);
+        Call<ResponseBody> call = apiService.addUjian(user.get("idUser"), score.toString());
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if(response.isSuccessful()){
+                    Log.d(TAG,response.message());
+                    Log.d(TAG,"Success Mengirimkan data ujian ke server.");
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Log.e(TAG,"Gagal mengirimkan data ujian ke server");
+                Log.d(TAG,"Memasukkan data ujian ke data tunggu");
+                db.setUjian(Integer.parseInt(user.get("idUser")),(int) Math.ceil(score),SYNCHED_FALSE);
+                Log.d(TAG,"Memasukkan ujian ke local database");
+            }
+        });
         Intent i = new Intent(getApplicationContext(),HasilActivity.class);
         i.putExtra("score",score);
+        i.putExtra("idUser",user.get("idUser"));
         startActivity(i);
+        finish();
+
     }
 
     private void blinkText() {
@@ -157,8 +225,10 @@ public class UjianActivity extends AppCompatActivity implements View.OnClickList
     private void initView() {
         context = this.getApplicationContext();
         pd = ProgressDialog.show(this,null,"Sedang menyiapkan soal ujian",true,false);
+        mp = MediaPlayer.create(UjianActivity.this,R.raw.bgm);
+        mp.start();
 
-        score = 0.0;
+        score = 0;
         currentQue = 0;
         timer = (TextView) findViewById(R.id.text_timer);
         pb = (ProgressBar) findViewById(R.id.progress_bar);
@@ -226,7 +296,7 @@ public class UjianActivity extends AppCompatActivity implements View.OnClickList
         }
 
         if(ans.equalsIgnoreCase(soalSekarang.getJawaban())){
-            score += 100/listSoalUjian.size();
+            score +=100/listSoalUjian.size();
         }
 
         countDownTimer.cancel();
@@ -254,5 +324,11 @@ public class UjianActivity extends AppCompatActivity implements View.OnClickList
 
         Log.d("RES", "onCheckedChanged: " + ans + "[" + score + "]");
 
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mp.stop();
     }
 }

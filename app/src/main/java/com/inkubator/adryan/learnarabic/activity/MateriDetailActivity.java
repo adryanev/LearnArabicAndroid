@@ -1,21 +1,26 @@
 package com.inkubator.adryan.learnarabic.activity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.media.MediaPlayer;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.AppCompatImageButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.inkubator.adryan.learnarabic.R;
 import com.inkubator.adryan.learnarabic.adapter.MateriDetailAdapter;
+import com.inkubator.adryan.learnarabic.database.DbHelper;
 import com.inkubator.adryan.learnarabic.model.MateriDetail;
 import com.inkubator.adryan.learnarabic.rest.ApiClient;
 import com.inkubator.adryan.learnarabic.rest.ApiInterface;
 import com.inkubator.adryan.learnarabic.response.ResponseMateriDetail;
+import com.lsjwzh.widget.recyclerviewpager.RecyclerViewPager;
 
 import java.util.HashMap;
 import java.util.List;
@@ -31,25 +36,53 @@ import retrofit2.Response;
 public class MateriDetailActivity extends AppCompatActivity {
 
     private  static final String TAG = MainActivity.class.getSimpleName();
-
+    DbHelper dbHelper;
+    MediaPlayer mp;
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_materi_detail_recycle_view);
 
-        getSoal();
+        dbHelper = new DbHelper(getApplicationContext());
+        Intent i = getIntent();
+        Integer idSubMateri = i.getIntExtra("idSubMateri",0);
+          //  getSoal();
+        mp = new MediaPlayer();
+        getMateriDetailFromDB(idSubMateri);
+
+        Integer idKategori = dbHelper.getIdKategoriFromSubMateri(idSubMateri);
+        Integer idMateri = dbHelper.getIdMateriFromSubMateri(idSubMateri);
+        String namaKategori = dbHelper.getNamaKategori(idKategori);
+        String namaMateri = dbHelper.getNamaMateri(idMateri);
+        getSupportActionBar().setTitle(namaMateri+" - "+namaKategori);
     }
+
+
+    private void getMateriDetailFromDB(int idSubMateri) {
+
+        List<MateriDetail> md = dbHelper.getMateriDetailBySubMateri(idSubMateri);
+       // final RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycle_materi_detail);
+        //recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+        //recyclerView.setAdapter(new MateriDetailAdapter(md,getApplicationContext()));
+
+        RecyclerViewPager mRecyclerView = (RecyclerViewPager) findViewById(R.id.recycle_materi_detail);
+        LinearLayoutManager layout = new LinearLayoutManager(getApplicationContext(),LinearLayoutManager.HORIZONTAL,false);
+        mRecyclerView.setLayoutManager(layout);
+        mRecyclerView.setAdapter(new MateriDetailAdapter(md,getApplicationContext(),mp));
+
+    }
+
 
     private void getSoal() {
         Intent intent = getIntent();
-        Integer idMateri = intent.getIntExtra("idMateri",0);
+        Integer idMateri = intent.getIntExtra("idSubMateri",0);
         HashMap<String, Integer> params = new HashMap<>();
         params.put("idMateri",idMateri);
-       final RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycle_materi_detail);
+        final RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycle_materi_detail);
         recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
         ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
 
-        Call<ResponseMateriDetail> call = apiService.getMateriDetailByIdMateri(params);
+        Call<ResponseMateriDetail> call = apiService.getAllMateriDetail();
         call.enqueue(new Callback<ResponseMateriDetail>() {
             @Override
             public void onResponse(Call<ResponseMateriDetail> call, Response<ResponseMateriDetail> response) {
@@ -58,7 +91,7 @@ public class MateriDetailActivity extends AppCompatActivity {
                     List<MateriDetail> materiDetails = response.body().getMateriDetails();
                     Log.d(TAG,"Succes receiving: "+materiDetails.size());
 
-                    recyclerView.setAdapter(new MateriDetailAdapter(materiDetails,getApplicationContext()));
+                    recyclerView.setAdapter(new MateriDetailAdapter(materiDetails,getApplicationContext(),mp));
                 }
                 else{
                     int statusCode  = response.code();
@@ -74,4 +107,14 @@ public class MateriDetailActivity extends AppCompatActivity {
             }
         });
     }
+
+    public boolean checkConnectivity(){
+        ConnectivityManager connectivityManager = (ConnectivityManager) this.getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+
+        if(networkInfo !=null && networkInfo.isConnected()) return true;
+        else return false;
+
+    }
+
 }
