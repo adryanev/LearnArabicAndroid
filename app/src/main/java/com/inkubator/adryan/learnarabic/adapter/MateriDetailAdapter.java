@@ -22,6 +22,7 @@ import com.inkubator.adryan.learnarabic.R;
 import com.inkubator.adryan.learnarabic.config.ServerConfig;
 import com.inkubator.adryan.learnarabic.database.DbHelper;
 import com.inkubator.adryan.learnarabic.model.MateriDetail;
+import com.inkubator.adryan.learnarabic.utils.AudioPlay;
 import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
@@ -100,6 +101,10 @@ public class MateriDetailAdapter extends RecyclerView.Adapter<MateriDetailAdapte
         holder.im.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+
+                AudioPlay.playAudio(context,ServerConfig.SUARA_FOLDER+materiDetail.getSuara());
+                /*
                 try {
                     mp.release();
                     mp = new MediaPlayer();
@@ -127,8 +132,11 @@ public class MateriDetailAdapter extends RecyclerView.Adapter<MateriDetailAdapte
                     Toast.makeText(context,"Tidak menemukan file mp3 di server.",Toast.LENGTH_SHORT).show();
                     e.printStackTrace();
                 }
+                */
             }
+
         });
+
 
     }
 

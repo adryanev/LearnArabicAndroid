@@ -20,6 +20,7 @@ import com.inkubator.adryan.learnarabic.model.MateriDetail;
 import com.inkubator.adryan.learnarabic.rest.ApiClient;
 import com.inkubator.adryan.learnarabic.rest.ApiInterface;
 import com.inkubator.adryan.learnarabic.response.ResponseMateriDetail;
+import com.inkubator.adryan.learnarabic.utils.AudioPlay;
 import com.lsjwzh.widget.recyclerviewpager.RecyclerViewPager;
 
 import java.util.HashMap;
@@ -68,7 +69,7 @@ public class MateriDetailActivity extends AppCompatActivity {
         RecyclerViewPager mRecyclerView = (RecyclerViewPager) findViewById(R.id.recycle_materi_detail);
         LinearLayoutManager layout = new LinearLayoutManager(getApplicationContext(),LinearLayoutManager.HORIZONTAL,false);
         mRecyclerView.setLayoutManager(layout);
-        mRecyclerView.setAdapter(new MateriDetailAdapter(md,getApplicationContext(),mp));
+        mRecyclerView.setAdapter(new MateriDetailAdapter(md,this,mp));
 
     }
 
@@ -117,4 +118,9 @@ public class MateriDetailActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        AudioPlay.stopAudio();
+    }
 }
