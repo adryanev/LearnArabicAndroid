@@ -113,7 +113,7 @@ public class LoginActivity extends AppCompatActivity{
                     Log.d("login", stringPassword);
                     String success = response.body().getStatus();
                     List<User> user = response.body().getData();
-                    if(success.equals("success")){
+                    if(!user.isEmpty()){
                         if(!user.isEmpty()) {
                             session.createLoginSession(user.get(0).getIdUser().toString(), user.get(0).getUsername(), user.get(0).getPassword(),
                                     user.get(0).getNama(), user.get(0).getEmail(), user.get(0).getTanggalLahir());
@@ -129,7 +129,7 @@ public class LoginActivity extends AppCompatActivity{
 
 
                     }else{
-                        Toast.makeText(context,"Gagal Login User",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context,"Username/password salah",Toast.LENGTH_SHORT).show();
                     }
                 }
                 else{

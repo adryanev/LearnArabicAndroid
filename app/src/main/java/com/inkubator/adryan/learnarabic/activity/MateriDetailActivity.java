@@ -121,6 +121,9 @@ public class MateriDetailActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        AudioPlay.stopAudio();
+        if(AudioPlay.isplayingAudio){
+            AudioPlay.stopAudio();
+        }
+
     }
 }

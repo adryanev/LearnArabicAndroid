@@ -47,4 +47,8 @@ public class AudioPlay {
         isplayingAudio=false;
         mediaPlayer.stop();
     }
+    public static void pauseAudio(){
+        isplayingAudio=false;
+        mediaPlayer.stop();
+    }
 }

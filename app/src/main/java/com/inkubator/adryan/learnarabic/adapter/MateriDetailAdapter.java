@@ -28,6 +28,8 @@ import com.squareup.picasso.Picasso;
 import java.io.IOException;
 import java.util.List;
 
+import static com.inkubator.adryan.learnarabic.R.drawable.ic_pause_black_24dp;
+
 /**
  * Created by adryanev on 05/10/17.
  */
@@ -85,12 +87,16 @@ public class MateriDetailAdapter extends RecyclerView.Adapter<MateriDetailAdapte
             holder.arab.setText(Html.fromHtml(materiDetail.getIsi()));
         }
 
-        holder.arab.setTextDirection(View.TEXT_DIRECTION_ANY_RTL);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            holder.arab.setTextDirection(View.TEXT_DIRECTION_ANY_RTL);
+        }
         Integer idKategori = db.getIdKategoriFromSubMateri(materiDetail.getIdSubMateri());
         switch (idKategori){
             case 3:
-            holder.arab.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-            holder.arab.setTextSize(TypedValue.COMPLEX_UNIT_PT,11);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+                    holder.arab.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+                }
+                holder.arab.setTextSize(TypedValue.COMPLEX_UNIT_PT,11);
 
         }
 
@@ -102,8 +108,18 @@ public class MateriDetailAdapter extends RecyclerView.Adapter<MateriDetailAdapte
             @Override
             public void onClick(View v) {
 
+                holder.im.setImageResource(R.drawable.ic_pause_black_24dp);
 
-                AudioPlay.playAudio(context,ServerConfig.SUARA_FOLDER+materiDetail.getSuara());
+                if(AudioPlay.isplayingAudio){
+
+                    holder.im.setImageResource(R.drawable.ic_volume_up_black_24dp);
+                    AudioPlay.pauseAudio();
+                }
+                else {
+                    AudioPlay.playAudio(context,ServerConfig.SUARA_FOLDER+materiDetail.getSuara());
+                    holder.im.setImageResource(R.drawable.ic_pause_black_24dp);
+
+                }
                 /*
                 try {
                     mp.release();
