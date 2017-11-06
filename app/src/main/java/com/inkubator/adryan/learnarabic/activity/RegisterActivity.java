@@ -67,8 +67,9 @@ public class RegisterActivity extends AppCompatActivity{
         password = (EditText) findViewById(R.id.etpassword);
         etTanggal = (EditText) findViewById(R.id.in_date);
         register = (Button) findViewById(R.id.register_button);
-        btnTanggal = (Button) findViewById(R.id.btn_date);
+        //btnTanggal = (Button) findViewById(R.id.btn_date);
         coordinatorLayout = (CoordinatorLayout) findViewById(R.id.cord);
+
 
         register.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -83,6 +84,7 @@ public class RegisterActivity extends AppCompatActivity{
                 }
             }
         });
+        /*
         btnTanggal.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -98,7 +100,21 @@ public class RegisterActivity extends AppCompatActivity{
 
                 }
         }});
+        */
 
+
+        etTanggal.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Get Current Date
+                final Calendar today = Calendar.getInstance();
+                mYear = today.get(Calendar.YEAR);
+                mMonth = today.get(Calendar.MONTH);
+                mDay = today.get(Calendar.DAY_OF_MONTH);
+
+                showDialog(DATE_DIALOG_ID);
+            }
+        });
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -153,14 +169,15 @@ public class RegisterActivity extends AppCompatActivity{
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
                 Log.e("debug", "onFailure: ERROR > " + t.getMessage());
+                loading.dismiss();
                 Snackbar snackbar = Snackbar
                         .make(coordinatorLayout, "Tidak dapat terhubung ke server..", Snackbar.LENGTH_LONG);
 
                 snackbar.show();
+
             }
         });
     }
-
 
     private void updateDate() {
         this.etTanggal.setText(new StringBuilder().append(mYear).append("-").append(mMonth+1).append("-").append(mDay));
@@ -176,6 +193,7 @@ public class RegisterActivity extends AppCompatActivity{
         }
     };
 
+    @SuppressWarnings("deprecation")
     @Override
     protected Dialog onCreateDialog(int id) {
         switch (id) {

@@ -114,22 +114,26 @@ public class MateriDetailAdapter extends RecyclerView.Adapter<MateriDetailAdapte
             @Override
             public void onClick(View v) {
 
-                holder.im.setImageResource(R.drawable.ic_pause_black_24dp);
+                holder.im.setImageResource(R.drawable.ic_stop_black_24dp);
 
                 if(AudioPlay.isplayingAudio){
-
                     holder.im.setImageResource(R.drawable.ic_volume_up_black_24dp);
                     AudioPlay.pauseAudio();
                 }
                 else {
                     AudioPlay.playAudio(context,ServerConfig.SUARA_FOLDER+materiDetail.getSuara());
-                    holder.im.setImageResource(R.drawable.ic_pause_black_24dp);
-                    if(AudioPlay.isComplete()){
+                    holder.im.setImageResource(R.drawable.ic_stop_black_24dp);
+
+
+                }
+                AudioPlay.mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                    @Override
+                    public void onCompletion(MediaPlayer mp) {
                         holder.im.setImageResource(R.drawable.ic_volume_up_black_24dp);
                         AudioPlay.stopAudio();
                     }
+                });
 
-                }
                 /*
                 try {
                     mp.release();
@@ -162,6 +166,8 @@ public class MateriDetailAdapter extends RecyclerView.Adapter<MateriDetailAdapte
             }
 
         });
+
+
 
 
 

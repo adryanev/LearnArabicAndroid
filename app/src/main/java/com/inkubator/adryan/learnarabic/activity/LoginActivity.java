@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -43,7 +44,7 @@ import retrofit2.Response;
 
 public class LoginActivity extends AppCompatActivity{
 
-    EditText username,password;
+    TextInputEditText username,password;
     TextView register;
     Button loginButton;
     ProgressDialog loading;
@@ -56,8 +57,8 @@ public class LoginActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         session = new SessionManager(getApplicationContext());
-        username = (EditText)findViewById(R.id.username);
-        password = (EditText)findViewById(R.id.password);
+        username = (TextInputEditText) findViewById(R.id.username);
+        password = (TextInputEditText) findViewById(R.id.password);
         register = (TextView) findViewById(R.id.tvregister);
         context = this;
         apiService = ApiClient.getClient().create(ApiInterface.class);
@@ -134,6 +135,7 @@ public class LoginActivity extends AppCompatActivity{
                 }
                 else{
                     Log.i("debug", "onResponse: GA BERHASIL");
+                    Toast.makeText(context,"Maaf login tidak berhasil",Toast.LENGTH_SHORT).show();
                     loading.dismiss();
 
                 }

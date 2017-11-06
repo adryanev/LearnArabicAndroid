@@ -50,7 +50,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
 
-                        <EditText
+                        <android.support.design.widget.TextInputEditText
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:id="@+id/namaLengkap"
@@ -67,7 +67,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
 
-                        <EditText
+                        <android.support.design.widget.TextInputEditText
                             android:id="@+id/etusername"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -83,7 +83,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
 
-                        <EditText
+                        <android.support.design.widget.TextInputEditText
                             android:id="@+id/etpassword"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -99,7 +99,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
 
-                        <EditText
+                        <android.support.design.widget.TextInputEditText
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:id="@+id/email"
@@ -117,14 +117,19 @@
                         android:layout_height="wrap_content">
                         <EditText
                             android:id="@+id/in_date"
-                            android:layout_width="200dp"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_alignParentTop="true"
                             android:layout_alignParentLeft="true"
                             android:layout_alignParentStart="true"
-                            android:drawableLeft="@drawable/date"
+                            android:drawableStart="@drawable/date"
                             android:drawableTint="#FF4081"
-                            android:hint="Pilih Tanggal"/>
+                            android:hint="Pilih Tanggal"
+                            android:focusable="false"
+                            android:longClickable="false"
+                            android:editable="false"
+                            android:drawableLeft="@drawable/date" />
+                        <!--
                         <Button
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -133,7 +138,7 @@
                             android:layout_alignBottom="@+id/in_date"
                             android:layout_toRightOf="@+id/in_date"
                             android:layout_toEndOf="@+id/in_date" />
-
+                        -->
                     </RelativeLayout>
 
                     <Button
@@ -148,6 +153,7 @@
                         android:textSize="18sp" />
 
                     <TextView
+                        android:textColor="@color/colorPrimary"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:id="@+id/tv_login"

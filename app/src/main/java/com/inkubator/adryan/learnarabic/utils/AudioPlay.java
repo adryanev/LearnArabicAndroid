@@ -8,6 +8,9 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.SoundPool;
 import android.net.Uri;
+import android.widget.Toast;
+
+import com.google.android.youtube.player.internal.r;
 
 import java.io.IOException;
 
@@ -19,15 +22,19 @@ public class AudioPlay {
 
     public static void playAudio(Context c,String path){
         mediaPlayer = new MediaPlayer();
-        mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-        try {
-            mediaPlayer.setDataSource(path);
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        soundPool = new SoundPool(1, AudioManager.STREAM_MUSIC, 100);
         if(!mediaPlayer.isPlaying()){
+            try {
+                mediaPlayer.setDataSource(path);
+
+            } catch (IOException e) {
+                Toast.makeText(c,"Tidak dapat menemukan file audio.",Toast.LENGTH_SHORT).show();
+                e.printStackTrace();
+            }
+        }
+        mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+
+        soundPool = new SoundPool(1, AudioManager.STREAM_MUSIC, 100);
+        if(!isplayingAudio){
             mediaPlayer.prepareAsync();
             mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
                 @Override
@@ -39,6 +46,7 @@ public class AudioPlay {
                         mediaPlayer.start();
                     }
                     else {
+                        isplayingAudio = false;
                         mediaPlayer.pause();
                     }
                 }
@@ -63,6 +71,6 @@ public class AudioPlay {
     }
     public static void pauseAudio(){
         isplayingAudio=false;
-        mediaPlayer.stop();
+        mediaPlayer.pause();
     }
 }

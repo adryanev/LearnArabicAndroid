@@ -1,6 +1,7 @@
 package com.inkubator.adryan.learnarabic.activity;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -12,6 +13,7 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -41,9 +43,13 @@ public class MainActivity extends AppCompatActivity
 
         if(savedInstanceState!=null){
             fragment = getSupportFragmentManager().getFragment(savedInstanceState, "myFragmentName");
+            if(fragment == null){
+                fragment = new FragmentDefault();
+            }
         }else{
             fragment = new FragmentDefault();
         }
+
         sessionManager = new SessionManager(getApplicationContext());
         if(!sessionManager.isLoggedIn()){
             Intent intent = new Intent(this, LoginActivity.class);
@@ -52,8 +58,8 @@ public class MainActivity extends AppCompatActivity
             startActivity(intent);
             finish();
         }
-
         syncManager = new SyncManager(MainActivity.this);
+
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.fragment_container, fragment);
         transaction.commit();
@@ -99,17 +105,36 @@ public class MainActivity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.actionLogout) {
-            sessionManager.logoutUser();
-            Intent i = new Intent(this, LoginActivity.class);
-            // Closing all the Activities
-            i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            final Intent i = new Intent(this, LoginActivity.class);
+            android.app.AlertDialog.Builder b = new android.app.AlertDialog.Builder(this)
+                    .setTitle("Logout")
+                    .setPositiveButton("Ya", new DialogInterface.OnClickListener()
+                    {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which)
+                        {
+                            sessionManager.logoutUser();
 
-            // Add new Flag to start new Activity
-            i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            // Closing all the Activities
+                            i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                            // Add new Flag to start new Activity
+                            i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            // Staring Login Activity
+                            startActivity(i);
+                            finish();
 
-            // Staring Login Activity
-            startActivity(i);
-            finish();
+                        }
+                    })
+                    .setNegativeButton("Tidak", new DialogInterface.OnClickListener()
+                    {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which)
+                        {
+                            dialog.cancel();
+                        }
+                    })
+                    .setMessage("Apakah anda ingin logout?");
+            b.create().show();
             return true;
         }
         if (id == R.id.sync){
@@ -143,7 +168,6 @@ public class MainActivity extends AppCompatActivity
             fragment = new FragmentVideo();
         }
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.setCustomAnimations(android.R.anim.slide_out_right,android.R.anim.slide_in_left);
         transaction.addToBackStack(null);
         transaction.replace(R.id.fragment_container,fragment);
         transaction.commit();
@@ -162,9 +186,11 @@ public class MainActivity extends AppCompatActivity
 
     }
 
+
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         getSupportFragmentManager().putFragment(outState, "myFragmentName", fragment);
     }
+
 }
