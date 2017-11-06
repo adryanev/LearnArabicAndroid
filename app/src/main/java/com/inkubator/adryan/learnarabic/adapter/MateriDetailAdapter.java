@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -78,7 +79,7 @@ public class MateriDetailAdapter extends RecyclerView.Adapter<MateriDetailAdapte
     @Override
     public void onBindViewHolder(final MateriDetailViewHolder holder, int position) {
         final MateriDetail materiDetail = materiDetailsList.get(position);
-        Picasso.with(context).load(ServerConfig.IMAGE_FOLDER+materiDetail.getGambar()).into(holder.gambar);
+        Picasso.with(context).load(ServerConfig.IMAGE_FOLDER+materiDetail.getGambar()).resize(300,300).into(holder.gambar);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             holder.arab.setText(Html.fromHtml(materiDetail.getIsi(),Html.FROM_HTML_MODE_LEGACY));
@@ -92,11 +93,16 @@ public class MateriDetailAdapter extends RecyclerView.Adapter<MateriDetailAdapte
         }
         Integer idKategori = db.getIdKategoriFromSubMateri(materiDetail.getIdSubMateri());
         switch (idKategori){
+            case 1:case 2:
+                holder.arab.setGravity(Gravity.RELATIVE_HORIZONTAL_GRAVITY_MASK);
+                break;
+
             case 3:
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
                     holder.arab.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
                 }
                 holder.arab.setTextSize(TypedValue.COMPLEX_UNIT_PT,11);
+                break;
 
         }
 
@@ -118,6 +124,10 @@ public class MateriDetailAdapter extends RecyclerView.Adapter<MateriDetailAdapte
                 else {
                     AudioPlay.playAudio(context,ServerConfig.SUARA_FOLDER+materiDetail.getSuara());
                     holder.im.setImageResource(R.drawable.ic_pause_black_24dp);
+                    if(AudioPlay.isComplete()){
+                        holder.im.setImageResource(R.drawable.ic_volume_up_black_24dp);
+                        AudioPlay.stopAudio();
+                    }
 
                 }
                 /*
@@ -152,6 +162,7 @@ public class MateriDetailAdapter extends RecyclerView.Adapter<MateriDetailAdapte
             }
 
         });
+
 
 
     }

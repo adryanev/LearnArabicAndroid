@@ -12,6 +12,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -48,6 +50,7 @@ public class RegisterActivity extends AppCompatActivity{
     ApiInterface apiService;
     Context context;
     ProgressDialog loading;
+    CoordinatorLayout coordinatorLayout;
     static final int DATE_DIALOG_ID = 0;
 
     @Override
@@ -65,6 +68,7 @@ public class RegisterActivity extends AppCompatActivity{
         etTanggal = (EditText) findViewById(R.id.in_date);
         register = (Button) findViewById(R.id.register_button);
         btnTanggal = (Button) findViewById(R.id.btn_date);
+        coordinatorLayout = (CoordinatorLayout) findViewById(R.id.cord);
 
         register.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -145,7 +149,10 @@ public class RegisterActivity extends AppCompatActivity{
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
                 Log.e("debug", "onFailure: ERROR > " + t.getMessage());
-                Toast.makeText(context, "Koneksi Internet Bermasalah", Toast.LENGTH_SHORT).show();
+                Snackbar snackbar = Snackbar
+                        .make(coordinatorLayout, "Welcome to AndroidHive", Snackbar.LENGTH_LONG);
+
+                snackbar.show();
             }
         });
     }

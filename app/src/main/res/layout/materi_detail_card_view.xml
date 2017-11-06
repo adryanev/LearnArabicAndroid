@@ -1,54 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:card_view = "http://schemas.android.com/apk/res-auto"
+<android.support.v4.widget.NestedScrollView layout_height="match_parent"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_marginBottom="@dimen/activity_vertical_margin"
-    android:layout_marginEnd="@dimen/activity_horizontal_margin"
-    android:layout_marginStart="@dimen/activity_horizontal_margin"
-    android:layout_marginTop="@dimen/activity_vertical_margin"
-    android:orientation="vertical"
-    android:id="@+id/materi_layout"
-    >
-    <android.support.v7.widget.CardView
-        android:layout_height="match_parent"
+    android:layout_height="match_parent">
+    <LinearLayout
+        xmlns:card_view = "http://schemas.android.com/apk/res-auto"
+        xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
-        card_view:cardCornerRadius="5dp"
-       >
-        <LinearLayout
-            android:padding="@dimen/activity_horizontal_margin"
-            android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/activity_vertical_margin"
+        android:layout_marginEnd="@dimen/activity_horizontal_margin"
+        android:layout_marginStart="@dimen/activity_horizontal_margin"
+        android:layout_marginTop="@dimen/activity_vertical_margin"
+        android:orientation="vertical"
+        android:id="@+id/materi_layout"
+        >
+        <android.support.v7.widget.CardView
             android:layout_height="match_parent"
-            android:orientation="vertical">
-            <ImageView
+            android:layout_width="match_parent"
+            card_view:cardCornerRadius="5dp"
+            >
+            <LinearLayout
+                android:padding="@dimen/activity_horizontal_margin"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/iv_materi"
-                />
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/tv_arab"
-                android:textSize="20sp"
-                android:text="Arab"
-                />
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/tv_terjemahan"
-                android:textAlignment="center"
-                android:textSize="20sp"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/iv_materi"
+                    />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/tv_arab"
+                    android:textSize="20sp"
+                    android:text="Arab"
+                    />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/tv_terjemahan"
+                    android:textAlignment="center"
+                    android:textSize="20sp"
 
-                />
-            <ImageButton
-                android:id="@+id/sound"
-                android:visibility="gone"
-                android:layout_marginTop="8dp"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:src="@drawable/ic_volume_up_black_24dp"
-                android:background="@android:color/transparent"/>
-        </LinearLayout>
-    </android.support.v7.widget.CardView>
-</LinearLayout>
+                    />
+                <ImageButton
+                    android:id="@+id/sound"
+                    android:visibility="gone"
+                    android:layout_marginTop="8dp"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:src="@drawable/ic_volume_up_black_24dp"
+                    android:background="@android:color/transparent"/>
+            </LinearLayout>
+        </android.support.v7.widget.CardView>
+    </LinearLayout>
+
+</android.support.v4.widget.NestedScrollView>

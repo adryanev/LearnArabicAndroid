@@ -105,7 +105,7 @@ public class UjianActivity extends AppCompatActivity implements View.OnClickList
     }
 
     private void initTimer() {
-        countDownTimer = new CountDownTimer(60000,1000) {
+        countDownTimer = new CountDownTimer(30000,1000) {
             @Override
             public void onTick(long millisUntilFinished) {
                 long sec = millisUntilFinished/1000;
@@ -142,7 +142,7 @@ public class UjianActivity extends AppCompatActivity implements View.OnClickList
             }else{
                 textSoal.setText(Html.fromHtml(soalSekarang.getSoal()));
             }
-            Picasso.with(getApplicationContext()).load(ServerConfig.IMAGE_FOLDER+soalSekarang.getGambar()).resize(300,300).into(gambarSoal);
+            Picasso.with(getApplicationContext()).load(ServerConfig.IMAGE_FOLDER+soalSekarang.getGambar()).resize(250,250).into(gambarSoal);
 
             a.setText("A. "+soalSekarang.getA());
             b.setText("B. "+soalSekarang.getB());

@@ -15,6 +15,8 @@ public class AudioPlay {
     public static MediaPlayer mediaPlayer;
     private static SoundPool soundPool;
     public static boolean isplayingAudio=false;
+    static boolean a = false;
+
     public static void playAudio(Context c,String path){
         mediaPlayer = new MediaPlayer();
         mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
@@ -41,8 +43,20 @@ public class AudioPlay {
                     }
                 }
             });
+
         }
     }
+
+    public static boolean isComplete(){
+        mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mp) {
+               a = true;
+            }
+        });
+        return a;
+    }
+
     public static void stopAudio(){
         isplayingAudio=false;
         mediaPlayer.stop();

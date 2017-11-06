@@ -2,6 +2,9 @@ package com.inkubator.adryan.learnarabic.fragment;
 
 
 import android.app.ProgressDialog;
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
@@ -43,11 +46,19 @@ public class FragmentVideo extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        View view;
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_video, container, false);
-        getActivity().setTitle("Video");
-        rv= (RecyclerView) view.findViewById(R.id.rv_video);
-        prepareVideo();
+        if(checkConnectivity() == false){
+            view = inflater.inflate(R.layout.layout_offline, container, false);
+        }
+        else{
+            view = inflater.inflate(R.layout.fragment_video, container, false);
+            getActivity().setTitle("Video");
+            rv= (RecyclerView) view.findViewById(R.id.rv_video);
+            prepareVideo();
+        }
+
+
 
         return view;
     }
@@ -80,6 +91,14 @@ public class FragmentVideo extends Fragment {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
+
+    }
+    public boolean checkConnectivity(){
+        ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getApplication().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+
+        if(networkInfo !=null && networkInfo.isConnected()) return true;
+        else return false;
 
     }
 }

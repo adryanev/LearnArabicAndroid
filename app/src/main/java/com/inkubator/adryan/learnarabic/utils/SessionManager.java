@@ -1,9 +1,11 @@
 package com.inkubator.adryan.learnarabic.utils;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.support.v7.app.AppCompatActivity;
 
 import com.inkubator.adryan.learnarabic.activity.LoginActivity;
 import com.inkubator.adryan.learnarabic.activity.MainActivity;
@@ -79,14 +81,18 @@ public class SessionManager {
     }
 
     public void checkLogin(){
-        if (!this.isLoggedIn()){
+
+
+       /* if (!this.isLoggedIn()){
 
             Intent intent = new Intent(_context, LoginActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
             _context.startActivity(intent);
+            ((AppCompatActivity) _context).finish();
         }
+        */
     }
 
     /**
@@ -96,20 +102,9 @@ public class SessionManager {
         // Clearing all data from Shared Preferences
         editor.clear();
         editor.commit();
-
-        // After logout redirect user to Loing Activity
-        Intent i = new Intent(_context, LoginActivity.class);
-        // Closing all the Activities
-        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-
-        // Add new Flag to start new Activity
-        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-
-        // Staring Login Activity
-        _context.startActivity(i);
     }
 
-    private boolean isLoggedIn() {
+    public boolean isLoggedIn() {
         return sharedPreferences.getBoolean(IS_LOGGED_IN,false);
     }
 }

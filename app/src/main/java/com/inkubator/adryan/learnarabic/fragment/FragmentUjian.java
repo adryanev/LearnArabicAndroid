@@ -39,6 +39,7 @@ public class FragmentUjian extends Fragment {
             public void onClick(View v) {
                 if(checkConnectivity(getContext()) == true){
                    startActivity(i);
+
                 }else{
                     Toast.makeText(getContext(),"Silahkan Hidupkan Wifi/Mobile Data anda.",Toast.LENGTH_SHORT).show();
                 }

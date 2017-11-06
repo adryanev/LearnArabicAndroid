@@ -1,6 +1,7 @@
 package com.inkubator.adryan.learnarabic.activity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -44,7 +45,13 @@ public class MainActivity extends AppCompatActivity
             fragment = new FragmentDefault();
         }
         sessionManager = new SessionManager(getApplicationContext());
-        sessionManager.checkLogin();
+        if(!sessionManager.isLoggedIn()){
+            Intent intent = new Intent(this, LoginActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+            finish();
+        }
 
         syncManager = new SyncManager(MainActivity.this);
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
@@ -93,6 +100,15 @@ public class MainActivity extends AppCompatActivity
         //noinspection SimplifiableIfStatement
         if (id == R.id.actionLogout) {
             sessionManager.logoutUser();
+            Intent i = new Intent(this, LoginActivity.class);
+            // Closing all the Activities
+            i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+
+            // Add new Flag to start new Activity
+            i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+            // Staring Login Activity
+            startActivity(i);
             finish();
             return true;
         }
