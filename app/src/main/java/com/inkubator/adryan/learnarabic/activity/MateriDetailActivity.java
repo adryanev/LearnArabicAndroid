@@ -126,4 +126,12 @@ public class MateriDetailActivity extends AppCompatActivity {
         }
 
     }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if(AudioPlay.isplayingAudio){
+            AudioPlay.stopAudio();
+        }
+    }
 }

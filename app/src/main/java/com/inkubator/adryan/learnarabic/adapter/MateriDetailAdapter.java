@@ -118,7 +118,7 @@ public class MateriDetailAdapter extends RecyclerView.Adapter<MateriDetailAdapte
 
                 if(AudioPlay.isplayingAudio){
                     holder.im.setImageResource(R.drawable.ic_volume_up_black_24dp);
-                    AudioPlay.pauseAudio();
+                    AudioPlay.stopAudio();
                 }
                 else {
                     AudioPlay.playAudio(context,ServerConfig.SUARA_FOLDER+materiDetail.getSuara());
@@ -131,6 +131,7 @@ public class MateriDetailAdapter extends RecyclerView.Adapter<MateriDetailAdapte
                     public void onCompletion(MediaPlayer mp) {
                         holder.im.setImageResource(R.drawable.ic_volume_up_black_24dp);
                         AudioPlay.stopAudio();
+
                     }
                 });
 

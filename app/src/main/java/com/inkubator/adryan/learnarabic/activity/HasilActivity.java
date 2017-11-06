@@ -35,7 +35,7 @@ public class HasilActivity extends AppCompatActivity {
         {
             txtScore.setTextColor(Color.RED);
             txtResult.setText("Gagal");
-            txtGreetings.setText("Maaf Nilai anda tidak mencukupi untuk lulus di Ujian ini.");
+            txtGreetings.setText("Maaf nilai anda tidak mencukupi untuk lulus di ujian ini.");
         }
         else
         {

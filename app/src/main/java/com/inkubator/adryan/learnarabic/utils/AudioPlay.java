@@ -47,7 +47,8 @@ public class AudioPlay {
                     }
                     else {
                         isplayingAudio = false;
-                        mediaPlayer.pause();
+                        mediaPlayer.stop();
+                        mediaPlayer.release();
                     }
                 }
             });
@@ -68,6 +69,7 @@ public class AudioPlay {
     public static void stopAudio(){
         isplayingAudio=false;
         mediaPlayer.stop();
+        mediaPlayer.release();
     }
     public static void pauseAudio(){
         isplayingAudio=false;
