@@ -33,12 +33,33 @@ public class FragmentUjian extends Fragment {
         View view = inflater.inflate(R.layout.fragment_ujian,container,false);
         getActivity().setTitle("Ujian");
         final Intent i = new Intent(getActivity(),UjianActivity.class);
+
         btnUjian = (Button) view.findViewById(R.id.btn_kerjakan);
         btnUjian.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(checkConnectivity(getContext()) == true){
-                   startActivity(i);
+                    AlertDialog.Builder b = new AlertDialog.Builder(getActivity())
+                            .setTitle("Mulai Ujian")
+                            .setPositiveButton("Ya", new DialogInterface.OnClickListener()
+                            {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which)
+                                {
+                                    startActivity(i);
+                                }
+                            })
+                            .setNegativeButton("Tidak", new DialogInterface.OnClickListener()
+                            {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which)
+                                {
+                                    dialog.cancel();
+                                }
+                            })
+                            .setMessage("Apakah anda ingin memulai Ujian?");
+                    b.create().show();
+                   //startActivity(i);
 
                 }else{
                     Toast.makeText(getContext(),"Silahkan Hidupkan Wifi/Mobile Data anda.",Toast.LENGTH_SHORT).show();

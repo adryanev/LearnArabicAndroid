@@ -1,58 +1,77 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/activity_quiz_result"
+
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context=".activity.HasilActivity"
-    android:background="@drawable/bg3">
-
-    <TextView
-        android:id="@+id/txtScore"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@drawable/bg3"
+    tools:context=".activity.HasilActivity">
+    <android.support.v7.widget.CardView
+        android:layout_marginStart="@dimen/activity_horizontal_margin"
+        android:layout_marginEnd="@dimen/activity_horizontal_margin"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="85dp"
-        android:textSize="13pt"
-        android:text="Nilai: "/>
+        android:layout_gravity="center_vertical|center_horizontal"
+        app:cardBackgroundColor="#ffffffdf"
+        app:cardCornerRadius="10dp"
+        >
+        <RelativeLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:id="@+id/activity_quiz_result"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingBottom="@dimen/activity_vertical_margin"
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:paddingRight="@dimen/activity_horizontal_margin"
+            android:paddingTop="@dimen/activity_vertical_margin"
 
-    <TextView
-        android:id="@+id/txtResult"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/txtScore"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="37dp"
-        android:text="Result"
-        android:textAppearance="@style/TextAppearance.AppCompat.Headline"/>
+           >
 
-    <TextView
-        android:id="@+id/txtGreetings"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:text="Greetings"
-        android:textSize="30sp"
-        android:textStyle="bold"
-        android:layout_below="@+id/txtResult"
-        android:layout_centerHorizontal="true"/>
+            <TextView
+                android:id="@+id/txtScore"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/back_to_home_button"
-        android:layout_below="@+id/txtGreetings"
-        android:gravity="center"
-        android:text="Kembali ke halaman Utama"
-        android:layout_marginTop="20dp"
-        android:layout_centerHorizontal="true"
-        android:textColor="#fff"
-        android:padding="10dp"
-        android:background="@color/colorPrimary"/>
-</RelativeLayout>
+                android:textSize="13pt"
+                android:text="Nilai: "/>
+
+            <TextView
+                android:id="@+id/txtResult"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/txtScore"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="37dp"
+                android:text="Result"
+                android:textAppearance="@style/TextAppearance.AppCompat.Headline"/>
+
+            <TextView
+                android:id="@+id/txtGreetings"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="Greetings"
+                android:textSize="30sp"
+                android:textStyle="bold"
+                android:layout_below="@+id/txtResult"
+                android:layout_centerHorizontal="true"/>
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/back_to_home_button"
+                android:layout_below="@+id/txtGreetings"
+                android:gravity="center"
+                android:text="Kembali ke halaman Utama"
+                android:layout_marginTop="20dp"
+                android:layout_centerHorizontal="true"
+                android:textColor="#fff"
+                android:padding="10dp"
+                android:background="@color/colorPrimary"/>
+        </RelativeLayout>
+    </android.support.v7.widget.CardView>
+</android.support.design.widget.CoordinatorLayout>

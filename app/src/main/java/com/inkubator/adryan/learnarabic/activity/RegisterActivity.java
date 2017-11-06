@@ -124,14 +124,18 @@ public class RegisterActivity extends AppCompatActivity{
                     loading.dismiss();
                     try {
                         JSONObject jsonResult = new JSONObject(response.body().string());
+                        Log.d("RegisterActivity",jsonResult.toString());
                         if(jsonResult.getString("status").equals("success")){
                             Toast.makeText(context,"Sukses Registrasi "+ stringUsername,Toast.LENGTH_SHORT).show();
                             startActivity(new Intent(context,LoginActivity.class));
                             RegisterActivity.this.overridePendingTransition(android.R.anim.fade_in,android.R.anim.fade_out);
-
+                            finish();
 
                         }else{
-                            Toast.makeText(context,"Gagal Registrasi User",Toast.LENGTH_SHORT).show();
+                            Snackbar snackbar = Snackbar
+                                    .make(coordinatorLayout, "Gagal Registrasi Akun.", Snackbar.LENGTH_LONG);
+
+                            snackbar.show();
                         }
                     }catch (JSONException e){
                         e.printStackTrace();
@@ -150,7 +154,7 @@ public class RegisterActivity extends AppCompatActivity{
             public void onFailure(Call<ResponseBody> call, Throwable t) {
                 Log.e("debug", "onFailure: ERROR > " + t.getMessage());
                 Snackbar snackbar = Snackbar
-                        .make(coordinatorLayout, "Welcome to AndroidHive", Snackbar.LENGTH_LONG);
+                        .make(coordinatorLayout, "Tidak dapat terhubung ke server..", Snackbar.LENGTH_LONG);
 
                 snackbar.show();
             }
