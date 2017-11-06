@@ -25,22 +25,22 @@ public class AudioPlay {
             e.printStackTrace();
         }
         soundPool = new SoundPool(1, AudioManager.STREAM_MUSIC, 100);
-        mediaPlayer.prepareAsync();
-        mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-            @Override
-            public void onPrepared(MediaPlayer mp) {
+        if(!mediaPlayer.isPlaying()){
+            mediaPlayer.prepareAsync();
+            mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                @Override
+                public void onPrepared(MediaPlayer mp) {
 
-                if(!mediaPlayer.isPlaying())
-                {
-                    isplayingAudio=true;
-                    mediaPlayer.start();
+                    if(!mediaPlayer.isPlaying())
+                    {
+                        isplayingAudio=true;
+                        mediaPlayer.start();
+                    }
+                    else {
+                        mediaPlayer.pause();
+                    }
                 }
-            }
-        });
-        if(!mediaPlayer.isPlaying())
-        {
-            isplayingAudio=true;
-            mediaPlayer.start();
+            });
         }
     }
     public static void stopAudio(){
