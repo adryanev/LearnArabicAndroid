@@ -116,10 +116,7 @@ public class MainActivity extends AppCompatActivity
                             sessionManager.logoutUser();
 
                             // Closing all the Activities
-                            i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                            // Add new Flag to start new Activity
-                            i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            // Staring Login Activity
+                            i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
                             startActivity(i);
                             finish();
 
